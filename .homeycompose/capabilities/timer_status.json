@@ -1,0 +1,15 @@
+{
+  "type": "string",
+  "uiComponent": "sensor",
+  "title": {
+    "en": "Next start"
+  },
+  "desc": {
+    "en": "The current timer status, including its next start"
+  },
+  "value": "N/A",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "icon": "/assets/calendar.svg"
+}

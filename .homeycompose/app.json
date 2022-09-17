@@ -1,0 +1,25 @@
+{
+  "id": "se.hjonhed.robonect",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": ["local"],
+  "name": {
+    "en": "Robonect"
+  },
+  "brandColor": "#f98227",
+  "description": {
+    "en": "Adds support for robotic mowers with a Robonect module installed."
+  },
+  "category": ["appliances"],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Henrik Jonhed",
+    "email": "henrikjonhed@gmail.com"
+  }
+}

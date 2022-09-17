@@ -1,0 +1,83 @@
+{
+  "type": "enum",
+  "uiComponent": "sensor",
+  "title": {
+    "en": "Status Mode"
+  },
+  "desc": {
+    "en": "The current mower status mode"
+  },
+  "value": "0",
+  "values": [
+    {
+      "id": "0",
+      "title": {
+        "en": "Detecting status"
+      }
+    },
+    {
+      "id": "1",
+      "title": {
+        "en": "Parked"
+      }
+    },
+    {
+      "id": "2",
+      "title": {
+        "en": "Mowing"
+      }
+    },
+    {
+      "id": "3",
+      "title": {
+        "en": "Search charging station"
+      }
+    },
+    {
+      "id": "4",
+      "title": {
+        "en": "Charging"
+      }
+    },
+    {
+      "id": "5",
+      "title": {
+        "en": "Searching"
+      }
+    },
+    {
+      "id": "7",
+      "title": {
+        "en": "Error"
+      }
+    },
+    {
+      "id": "8",
+      "title": {
+        "en": "Lost signal"
+      }
+    },
+    {
+      "id": "16",
+      "title": {
+        "en": "Off"
+      }
+    },
+    {
+      "id": "17",
+      "title": {
+        "en": "Sleeping"
+      }
+    },
+    {
+      "id": "99",
+      "title": {
+        "en": "Unknown"
+      }
+    }
+  ],
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "icon": "/assets/activity.svg"
+}

@@ -1,0 +1,95 @@
+{
+  "name": {
+    "en": "Robonect"
+  },
+  "class": "other",
+  "capabilities": [
+    "measure_battery",
+    "measure_humidity",
+    "measure_temperature",
+    "status_mode",
+    "mode",
+    "signal",
+    "timer_status"
+  ],
+  "platforms": ["local"],
+  "connectivity": ["lan"],
+  "images": {
+    "small": "{{driverAssetsPath}}/images/small.png",
+    "large": "{{driverAssetsPath}}/images/large.png",
+    "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
+  },
+  "energy": {
+    "batteries": ["INTERNAL"]
+  },
+  "discovery": "robonect-mdns",
+  "pair": [
+    {
+      "id": "list_devices",
+      "template": "list_devices",
+      "options": {
+        "singular": true
+      },
+      "navigation": { "next": "login_credentials" }
+    },
+    {
+      "id": "login_credentials",
+      "template": "login_credentials",
+      "options": {
+        "logo": "logo.png",
+        "usernameLabel": { "en": "User" },
+        "usernamePlaceholder": { "en": "User" },
+        "passwordLabel": { "en": "Password" },
+        "passwordPlaceholder": { "en": "Password" }
+      },
+      "navigation": { "next": "add_device" }
+    },
+    {
+      "id": "add_device"
+    }
+  ],
+  "settings": [
+    {
+      "id": "poll_interval",
+      "type": "number",
+      "value": 1,
+      "min": 0.1,
+      "max": 60,
+      "label": {
+        "en": "Polling interval (minutes)"
+      },
+      "hint": {
+        "en": "The interval between the attempts to read an update from the mower."
+      }
+    },
+    {
+      "id": "address",
+      "type": "text",
+      "label": {
+        "en": "IP address on local network"
+      },
+      "value": "x.x.x.x"
+    },
+    {
+      "type": "group",
+      "label": "Login Credentials",
+      "children": [
+        {
+          "id": "username",
+          "type": "text",
+          "label": {
+            "en": "Username"
+          },
+          "value": "admin"
+        },
+        {
+          "id": "password",
+          "type": "password",
+          "label": {
+            "en": "Password"
+          }
+        }
+      ]
+    }
+  ]
+}

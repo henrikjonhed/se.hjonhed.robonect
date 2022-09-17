@@ -1,0 +1,45 @@
+{
+  "actions": [
+    {
+      "id": "set-mode-to",
+      "title": {
+        "en": "Set mode to..."
+      },
+      "titleFormatted": {
+        "en": "Set mode to [[mode]]"
+      },
+      "args": [
+        {
+          "type": "dropdown",
+          "name": "mode",
+          "values": [
+            {
+              "id": "0",
+              "label": {
+                "en": "Auto"
+              }
+            },
+            {
+              "id": "1",
+              "label": {
+                "en": "Manual"
+              }
+            },
+            {
+              "id": "2",
+              "label": {
+                "en": "Home"
+              }
+            },
+            {
+              "id": "3",
+              "label": {
+                "en": "EOD"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

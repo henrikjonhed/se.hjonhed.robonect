@@ -1,0 +1,16 @@
+{
+  "type": "number",
+  "uiComponent": "sensor",
+  "title": {
+    "en": "Wifi strengh"
+  },
+  "desc": {
+    "en": "The current signal strengh for the wifi connection"
+  },
+  "value": 0,
+  "unit": "rssi",
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "icon": "/assets/wifi.svg"
+}

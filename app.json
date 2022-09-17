@@ -1,0 +1,362 @@
+{
+  "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
+  "id": "se.hjonhed.robonect",
+  "version": "1.0.0",
+  "compatibility": ">=5.0.0",
+  "sdk": 3,
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "Robonect"
+  },
+  "brandColor": "#f98227",
+  "description": {
+    "en": "Adds support for robotic mowers with a Robonect module installed."
+  },
+  "category": [
+    "appliances"
+  ],
+  "permissions": [],
+  "images": {
+    "small": "/assets/images/small.png",
+    "large": "/assets/images/large.png",
+    "xlarge": "/assets/images/xlarge.png"
+  },
+  "author": {
+    "name": "Henrik Jonhed",
+    "email": "henrikjonhed@gmail.com"
+  },
+  "flow": {
+    "actions": [
+      {
+        "id": "set-mode-to",
+        "title": {
+          "en": "Set mode to..."
+        },
+        "titleFormatted": {
+          "en": "Set mode to [[mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          },
+          {
+            "type": "dropdown",
+            "name": "mode",
+            "values": [
+              {
+                "id": "0",
+                "label": {
+                  "en": "Auto"
+                }
+              },
+              {
+                "id": "1",
+                "label": {
+                  "en": "Manual"
+                }
+              },
+              {
+                "id": "2",
+                "label": {
+                  "en": "Home"
+                }
+              },
+              {
+                "id": "3",
+                "label": {
+                  "en": "EOD"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "drivers": [
+    {
+      "name": {
+        "en": "Robonect"
+      },
+      "class": "other",
+      "capabilities": [
+        "measure_battery",
+        "measure_humidity",
+        "measure_temperature",
+        "status_mode",
+        "mode",
+        "signal",
+        "timer_status"
+      ],
+      "platforms": [
+        "local"
+      ],
+      "connectivity": [
+        "lan"
+      ],
+      "images": {
+        "small": "/drivers/robonect/assets/images/small.png",
+        "large": "/drivers/robonect/assets/images/large.png",
+        "xlarge": "/drivers/robonect/assets/images/xlarge.png"
+      },
+      "energy": {
+        "batteries": [
+          "INTERNAL"
+        ]
+      },
+      "discovery": "robonect-mdns",
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "login_credentials"
+          }
+        },
+        {
+          "id": "login_credentials",
+          "template": "login_credentials",
+          "options": {
+            "logo": "logo.png",
+            "usernameLabel": {
+              "en": "User"
+            },
+            "usernamePlaceholder": {
+              "en": "User"
+            },
+            "passwordLabel": {
+              "en": "Password"
+            },
+            "passwordPlaceholder": {
+              "en": "Password"
+            }
+          },
+          "navigation": {
+            "next": "add_device"
+          }
+        },
+        {
+          "id": "add_device"
+        }
+      ],
+      "settings": [
+        {
+          "id": "poll_interval",
+          "type": "number",
+          "value": 1,
+          "min": 0.1,
+          "max": 60,
+          "label": {
+            "en": "Polling interval (minutes)"
+          },
+          "hint": {
+            "en": "The interval between the attempts to read an update from the mower."
+          }
+        },
+        {
+          "id": "address",
+          "type": "text",
+          "label": {
+            "en": "IP address on local network"
+          },
+          "value": "x.x.x.x"
+        },
+        {
+          "type": "group",
+          "label": "Login Credentials",
+          "children": [
+            {
+              "id": "username",
+              "type": "text",
+              "label": {
+                "en": "Username"
+              },
+              "value": "admin"
+            },
+            {
+              "id": "password",
+              "type": "password",
+              "label": {
+                "en": "Password"
+              }
+            }
+          ]
+        }
+      ],
+      "id": "robonect"
+    }
+  ],
+  "capabilities": {
+    "mode": {
+      "type": "enum",
+      "uiComponent": "picker",
+      "title": {
+        "en": "Mode"
+      },
+      "desc": {
+        "en": "The current mower mode"
+      },
+      "value": "home",
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Auto"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Manual"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Home"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "EOD"
+          }
+        }
+      ],
+      "getable": true,
+      "setable": true,
+      "insights": true
+    },
+    "signal": {
+      "type": "number",
+      "uiComponent": "sensor",
+      "title": {
+        "en": "Wifi strengh"
+      },
+      "desc": {
+        "en": "The current signal strengh for the wifi connection"
+      },
+      "value": 0,
+      "unit": "rssi",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "/assets/wifi.svg"
+    },
+    "status_mode": {
+      "type": "enum",
+      "uiComponent": "sensor",
+      "title": {
+        "en": "Status Mode"
+      },
+      "desc": {
+        "en": "The current mower status mode"
+      },
+      "value": "0",
+      "values": [
+        {
+          "id": "0",
+          "title": {
+            "en": "Detecting status"
+          }
+        },
+        {
+          "id": "1",
+          "title": {
+            "en": "Parked"
+          }
+        },
+        {
+          "id": "2",
+          "title": {
+            "en": "Mowing"
+          }
+        },
+        {
+          "id": "3",
+          "title": {
+            "en": "Search charging station"
+          }
+        },
+        {
+          "id": "4",
+          "title": {
+            "en": "Charging"
+          }
+        },
+        {
+          "id": "5",
+          "title": {
+            "en": "Searching"
+          }
+        },
+        {
+          "id": "7",
+          "title": {
+            "en": "Error"
+          }
+        },
+        {
+          "id": "8",
+          "title": {
+            "en": "Lost signal"
+          }
+        },
+        {
+          "id": "16",
+          "title": {
+            "en": "Off"
+          }
+        },
+        {
+          "id": "17",
+          "title": {
+            "en": "Sleeping"
+          }
+        },
+        {
+          "id": "99",
+          "title": {
+            "en": "Unknown"
+          }
+        }
+      ],
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "/assets/activity.svg"
+    },
+    "timer_status": {
+      "type": "string",
+      "uiComponent": "sensor",
+      "title": {
+        "en": "Next start"
+      },
+      "desc": {
+        "en": "The current timer status, including its next start"
+      },
+      "value": "N/A",
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "/assets/calendar.svg"
+    }
+  },
+  "discovery": {
+    "robonect-mdns": {
+      "type": "mdns-sd",
+      "mdns-sd": {
+        "name": "http",
+        "protocol": "tcp"
+      },
+      "id": "{{name}}"
+    }
+  }
+}
