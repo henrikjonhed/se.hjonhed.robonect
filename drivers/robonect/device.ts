@@ -92,7 +92,8 @@ class RobonectDevice extends Homey.Device {
       this.setAvailable();
     } catch (err) {
       this.error(err);
-      Sentry.captureException(err);
+      // @ts-ignore
+      this.homey.app.logger.captureException(err);
     }
   }
 

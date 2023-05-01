@@ -1,11 +1,12 @@
 import Homey from "homey";
-import * as Sentry from "@sentry/node";
+import { Log } from 'homey-log';
 
 class RobonectApp extends Homey.App {
+  logger: typeof Log = new Log({ homey: this.homey })
+
   async onInit() {
-    Sentry.init({
-      dsn: Homey.env.SENTRY_DSN
-    });
+    // @ts-ignore
+    this.homeyLog = this.logger;
 
     this.log("RobonectApp has been initialized");
   }
