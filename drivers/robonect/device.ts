@@ -67,29 +67,25 @@ class RobonectDevice extends Homey.Device {
       const statusResponse: StatusResponse = await client.getStatus();
 
       this.feedCommunicationWatchdog();
+      this.setAvailable();
 
       const { error } = statusResponse;
+      this.log(error);
       if (error) {
+        this.log('setting warning: ' + error.error_message);
         this.setWarning(error.error_message);
       } else {
         this.unsetWarning();
       }
 
-      const { status } = statusResponse;
+      const { status, timer, health } = statusResponse;
       this.setCapabilityValue("measure_battery", status?.battery);
       this.setCapabilityValue("status_mode", status?.status.toString());
       this.setCapabilityValue("mode", status?.mode.toString());
-
       this.setCapabilityValue("signal", statusResponse.wlan.signal);
-
-      const { timer } = statusResponse;
       this.setCapabilityValue("timer_status", this.getTimerStatusString(timer));
-
-      const { health } = statusResponse;
       this.setCapabilityValue("measure_temperature", health?.temperature);
       this.setCapabilityValue("measure_humidity", health?.humidity);
-
-      this.setAvailable();
     } catch (err) {
       this.error(err);
       // @ts-ignore
