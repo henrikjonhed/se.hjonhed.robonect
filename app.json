@@ -27,6 +27,13 @@
     "name": "Henrik Jonhed",
     "email": "henrikjonhed@gmail.com"
   },
+  "tags": {
+    "en": [
+      "mower",
+      "lawn",
+      "robotic lawn mower"
+    ]
+  },
   "flow": {
     "actions": [
       {
