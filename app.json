@@ -12,7 +12,7 @@
   },
   "brandColor": "#f98227",
   "description": {
-    "en": "Adds support for robotic lawn mowers with a Robonect module installed."
+    "en": "Connect your robotic lawn mower to Homey"
   },
   "category": [
     "appliances"
