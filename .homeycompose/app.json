@@ -9,7 +9,7 @@
   },
   "brandColor": "#f98227",
   "description": {
-    "en": "Adds support for robotic mowers with a Robonect module installed."
+    "en": "Adds support for robotic lawn mowers with a Robonect module installed."
   },
   "category": ["appliances"],
   "permissions": [],
