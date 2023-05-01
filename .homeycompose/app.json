@@ -32,5 +32,9 @@
       "lawn",
       "robotic lawn mower"
     ]
+  },
+  "source": "https://github.com/henrikjonhed/se.hjonhed.robonect",
+  "bugs": {
+    "url": "https://github.com/henrikjonhed/se.hjonhed.robonect/issues"
   }
 }
