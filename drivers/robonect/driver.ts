@@ -44,7 +44,7 @@ class RobonectDriver extends Homey.Driver {
 
     session.setHandler("login", async (data) => {
       const { address } = device.settings;
-      this.log(`Logging in to ${address}with user ${data.username}`);
+      this.log(`Logging in to ${address} with user ${data.username}`);
       const client = new RobonectClient(address, data.username, data.password);
       try {
         await client.getStatus();
