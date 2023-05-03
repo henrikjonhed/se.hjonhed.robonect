@@ -4,10 +4,15 @@ import { Log } from 'homey-log';
 class RobonectApp extends Homey.App {
   logger: typeof Log = new Log({ homey: this.homey })
 
-  async onInit() {
+  setupLogging() {
     // @ts-ignore
-    this.homeyLog = this.logger;
+    this.homeyLog = this.logger
+    // @ts-ignore
+    this.homeyLog.setUser(this.homey.cloud.getHomeyId())
+  }
 
+  async onInit() {
+    this.setupLogging()
     this.log("RobonectApp has been initialized");
   }
 }
