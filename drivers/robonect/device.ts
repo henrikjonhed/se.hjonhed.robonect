@@ -48,9 +48,9 @@ class RobonectDevice extends Homey.Device {
       case 1:
         return "Active";
       case 2: {
-        return moment(
+        return timerStatus.next ? moment(
           `${timerStatus.next.date} ${timerStatus.next.time}`
-        ).calendar();
+        ).calendar() : "N/A";
       }
     }
   }
