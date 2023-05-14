@@ -105,12 +105,20 @@ export class RobonectClient {
   }
 
   async setMode(mode: number): Promise<void> {
+    const modes: { [key: number]: string } = {
+      0: "auto",
+      1: "man",
+      2: "home",
+      3: "eod"
+    };
+    const newMode = modes[mode] || "unknown";
+
     return this.client
       .get<CommandResponse>("", <IRequestOptions>{
         queryParameters: {
           params: {
             cmd: "mode",
-            mode,
+            mode: newMode,
           },
         },
       })
