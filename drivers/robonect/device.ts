@@ -122,7 +122,6 @@ class RobonectDevice extends Homey.Device {
 
   async onInit() {
     this.log("RobonectDevice has been initialized");
-    await this.setSettings({ error_message: "test" });
 
     moment.updateLocale("en", {
       calendar: {
