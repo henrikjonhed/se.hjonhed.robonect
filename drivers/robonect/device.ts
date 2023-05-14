@@ -56,6 +56,16 @@ class RobonectDevice extends Homey.Device {
     }
   }
 
+  private async updateCurrentErrorMessage(errorMessage?: string) {
+    const currentErrorMessage = await this.getSetting("error_message");
+    if (errorMessage && currentErrorMessage !== errorMessage) {
+      await this.homey.notifications.createNotification({
+        excerpt: `Mower is in trouble: ${errorMessage}`
+      });
+    }
+    await this.setSettings({ error_message: errorMessage });
+  }
+
   private async pollData() {
     try {
       const settings = this.getSettings();
@@ -74,9 +84,11 @@ class RobonectDevice extends Homey.Device {
       this.log(error);
       if (error) {
         this.log('setting warning: ' + error.error_message);
-        this.setWarning(error.error_message);
+        await this.setWarning(error.error_message);
+        await this.updateCurrentErrorMessage(error.error_message);
       } else {
-        this.unsetWarning();
+        this.updateCurrentErrorMessage("No error is currently set");
+        await this.unsetWarning();
       }
 
       const { status, timer, health } = statusResponse;

@@ -199,6 +199,12 @@
               }
             }
           ]
+        },
+        {
+          "id": "error_message",
+          "type": "label",
+          "label": "Current error message",
+          "value": "No error is currently set"
         }
       ],
       "id": "robonect"
