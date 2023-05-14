@@ -13,5 +13,8 @@
   },
   "1.0.4": {
     "en": "Fixed issue where the app could crash if no next timer was set"
+  },
+  "1.0.5": {
+    "en": "Error messages are displayed in device settings and on Homey timeline. Possible to create job from flows\""
   }
 }
