@@ -1,7 +1,6 @@
 import Homey from "homey";
 import { DiscoveryResultMDNSSD } from "homey/lib/DiscoveryStrategy";
 import moment from "moment";
-import * as Sentry from "@sentry/node";
 import {
   TimerResponse,
   StatusResponse,
