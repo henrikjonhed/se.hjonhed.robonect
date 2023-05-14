@@ -16,5 +16,8 @@
   },
   "1.0.5": {
     "en": "Error messages are displayed in device settings and on Homey timeline. Possible to create job from flows\""
+  },
+  "1.0.6": {
+    "en": "Don't update timeline if no error is set"
   }
 }
