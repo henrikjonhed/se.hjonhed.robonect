@@ -58,7 +58,11 @@ class RobonectDevice extends Homey.Device {
 
   private async updateCurrentErrorMessage(errorMessage?: string) {
     const currentErrorMessage = await this.getSetting("error_message");
-    if (errorMessage && currentErrorMessage !== errorMessage) {
+    if (
+      errorMessage &&
+      currentErrorMessage !== errorMessage &&
+      errorMessage !== "No error is currently set"
+    ) {
       await this.homey.notifications.createNotification({
         excerpt: `Mower is in trouble: ${errorMessage}`
       });
