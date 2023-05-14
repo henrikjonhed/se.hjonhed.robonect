@@ -10,6 +10,9 @@ class RobonectDriver extends Homey.Driver {
     this.homey.flow.getActionCard("set-mode-to").registerRunListener((args) => {
       args.device.setMode(Number(args.mode));
     });
+    this.homey.flow.getActionCard("start-new-job").registerRunListener((args) => {
+      args.device.startNewJob(args.duration);
+    });
   }
 
   onPair(session: Homey.Driver.PairSession) {

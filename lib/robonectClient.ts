@@ -120,4 +120,23 @@ export class RobonectClient {
         }
       });
   }
+
+  async startNewJob(length_in_minutes: number): Promise<void> {
+    return this.client
+      .get<CommandResponse>("", <IRequestOptions>{
+        queryParameters: {
+          params: {
+            cmd: "mode",
+            mode: "job",
+            remote_start: 0,
+            duration: length_in_minutes
+          },
+        },
+      })
+      .then((response: IRestResponse<CommandResponse>) => {
+        if (!response.result?.successful) {
+          throw new Error("Could not start job");
+        }
+      });
+  }
 }

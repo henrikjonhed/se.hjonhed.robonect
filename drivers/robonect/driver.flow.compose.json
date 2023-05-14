@@ -40,6 +40,21 @@
           ]
         }
       ]
+    },
+    {
+      "id": "start-new-job",
+      "title": {
+        "en": "Start new job..."
+      },
+      "titleFormatted": {
+        "en": "Start new job for [[duration]] minutes"
+      },
+      "args": [
+        {
+          "type": "number",
+          "name": "duration"
+        }
+      ]
     }
   ]
 }

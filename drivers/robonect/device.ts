@@ -148,6 +148,17 @@ class RobonectDevice extends Homey.Device {
     await client.setMode(mode);
   }
 
+  async startNewJob(duration_in_minutes: number) {
+    this.log(`Starting new job for ${duration_in_minutes} minutes`);
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password
+    );
+    await client.startNewJob(duration_in_minutes);
+  }
+
   async onSettings({
     oldSettings,
     newSettings,
