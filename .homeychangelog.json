@@ -10,5 +10,8 @@
   },
   "1.0.3": {
     "en": "Updated application manifest with tags and Github links"
+  },
+  "1.0.4": {
+    "en": "Fixed issue where the app could crash if no next timer was set"
   }
 }
