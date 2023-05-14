@@ -6,6 +6,8 @@ import {
   TimerResponse,
   StatusResponse,
   RobonectClient,
+  AuthorizationError,
+  NotReachableError,
 } from "../../lib/robonectClient";
 
 class RobonectDevice extends Homey.Device {
@@ -88,6 +90,12 @@ class RobonectDevice extends Homey.Device {
       this.setCapabilityValue("measure_humidity", health?.humidity);
     } catch (err) {
       this.error(err);
+      if (err instanceof AuthorizationError) {
+        this.setUnavailable("Authorization error, please check your credentials");
+        return;
+      } else if (err instanceof NotReachableError) {
+        return;
+      }
       // @ts-ignore
       this.homey.app.logger.captureException(err);
     }

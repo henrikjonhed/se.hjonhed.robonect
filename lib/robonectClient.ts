@@ -1,6 +1,20 @@
 import { IRequestOptions, RestClient, IRestResponse } from "typed-rest-client";
 import { BasicCredentialHandler } from "typed-rest-client/Handlers";
 
+export class AuthorizationError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "AuthorizationError";
+  }
+}
+
+export class NotReachableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "NotReachableError";
+  }
+}
+
 export interface TimerResponse {
   status: number; // 0: disabled, 1: active, 2: standby
   next: {
@@ -70,9 +84,21 @@ export class RobonectClient {
           },
         },
       })
+      .catch((err) => {
+        if (err && err.code === "ECONNREFUSED" || err.code === "ECONNRESET" || err.code === "EHOSTUNREACH") {
+          throw new NotReachableError("Could not reach Robonect");
+        }
+        throw err;
+      })
       .then((response: IRestResponse<StatusResponse>) => {
+        if (response.statusCode === 401) {
+          throw new AuthorizationError("Unauthorized, wrong username or password");
+        }
+        else if (response.statusCode !== 200) {
+          throw new Error("Could not read data from Robonect, status code: " + response.statusCode)
+        }
         if (!response.result) {
-          throw new Error("Could not fetch data");
+          throw new Error("Unable to read data from Robonect");
         }
         return response.result!!;
       });
