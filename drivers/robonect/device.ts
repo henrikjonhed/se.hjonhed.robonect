@@ -49,9 +49,11 @@ class RobonectDevice extends Homey.Device {
       case 1:
         return "Active";
       case 2: {
-        return timerStatus.next ? moment(
-          `${timerStatus.next.date} ${timerStatus.next.time}`
-        ).calendar() : "N/A";
+        return timerStatus.next
+          ? moment(
+              `${timerStatus.next.date} ${timerStatus.next.time}`
+            ).calendar()
+          : "N/A";
       }
     }
   }
@@ -64,7 +66,7 @@ class RobonectDevice extends Homey.Device {
       errorMessage !== "No error is currently set"
     ) {
       await this.homey.notifications.createNotification({
-        excerpt: `Mower is in trouble: ${errorMessage}`
+        excerpt: `Mower is in trouble: ${errorMessage}`,
       });
     }
     await this.setSettings({ error_message: errorMessage });
@@ -80,14 +82,14 @@ class RobonectDevice extends Homey.Device {
       );
 
       const statusResponse: StatusResponse = await client.getStatus();
-      this.log(statusResponse)
+      this.log(statusResponse);
 
       this.feedCommunicationWatchdog();
       await this.setAvailable();
 
       const { error } = statusResponse;
       if (error) {
-        this.log('setting warning: ' + error.error_message);
+        this.log("setting warning: " + error.error_message);
         await this.setWarning(error.error_message);
         await this.updateCurrentErrorMessage(error.error_message);
       } else {
@@ -106,7 +108,9 @@ class RobonectDevice extends Homey.Device {
     } catch (err) {
       this.error(err);
       if (err instanceof AuthorizationError) {
-        await this.setUnavailable("Authorization error, please check your credentials");
+        await this.setUnavailable(
+          "Authorization error, please check your credentials"
+        );
         return;
       } else if (err instanceof NotReachableError) {
         return;
