@@ -76,12 +76,12 @@ class RobonectDevice extends Homey.Device {
       );
 
       const statusResponse: StatusResponse = await client.getStatus();
+      this.log(statusResponse)
 
       this.feedCommunicationWatchdog();
       await this.setAvailable();
 
       const { error } = statusResponse;
-      this.log(error);
       if (error) {
         this.log('setting warning: ' + error.error_message);
         await this.setWarning(error.error_message);
