@@ -36,8 +36,8 @@ class RobonectDevice extends Homey.Device {
 
   feedCommunicationWatchdog() {
     this.homey.clearTimeout(this.communicationTimer);
-    this.communicationTimer = this.homey.setTimeout(() => {
-      this.setUnavailable("Have not heard from device in 24 hours");
+    this.communicationTimer = this.homey.setTimeout(async () => {
+      await this.setUnavailable("Have not heard from device in 24 hours");
     }, 1 * 1000 * 60 * 60 * 24); // 1 day
   }
 
@@ -78,7 +78,7 @@ class RobonectDevice extends Homey.Device {
       const statusResponse: StatusResponse = await client.getStatus();
 
       this.feedCommunicationWatchdog();
-      this.setAvailable();
+      await this.setAvailable();
 
       const { error } = statusResponse;
       this.log(error);
@@ -102,7 +102,7 @@ class RobonectDevice extends Homey.Device {
     } catch (err) {
       this.error(err);
       if (err instanceof AuthorizationError) {
-        this.setUnavailable("Authorization error, please check your credentials");
+        await this.setUnavailable("Authorization error, please check your credentials");
         return;
       } else if (err instanceof NotReachableError) {
         return;
@@ -114,6 +114,7 @@ class RobonectDevice extends Homey.Device {
 
   async onInit() {
     this.log("RobonectDevice has been initialized");
+    await this.setSettings({ error_message: "test" });
 
     moment.updateLocale("en", {
       calendar: {
@@ -132,8 +133,8 @@ class RobonectDevice extends Homey.Device {
 
     await this.pollData();
     const settings = this.getSettings();
-    this.pollingInterval = this.homey.setInterval(() => {
-      this.pollData();
+    this.pollingInterval = this.homey.setInterval(async () => {
+      await this.pollData();
     }, settings.poll_interval * 60 * 1000);
   }
 
@@ -170,8 +171,8 @@ class RobonectDevice extends Homey.Device {
   }): Promise<string | void> {
     if (changedKeys.includes("poll_interval")) {
       this.homey.clearInterval(this.pollingInterval);
-      this.homey.setInterval(() => {
-        this.pollData();
+      this.homey.setInterval(async () => {
+        await this.pollData();
       }, newSettings.poll_interval * 60 * 1000);
     }
   }
