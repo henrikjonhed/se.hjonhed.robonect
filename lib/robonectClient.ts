@@ -91,6 +91,9 @@ export class RobonectClient {
         if (err && err.statusCode == 401) {
           throw new AuthorizationError("Unauthorized, wrong username or password");
         }
+        if (err && err.code === "DEPTH_ZERO_SELF_SIGNED_CERT") {
+          throw new NotReachableError("Could not reach Robonect, certificate error")
+        }
         throw err;
       })
       .then((response: IRestResponse<StatusResponse>) => {
