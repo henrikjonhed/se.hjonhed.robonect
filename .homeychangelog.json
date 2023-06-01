@@ -28,5 +28,8 @@
   },
   "1.0.9": {
     "en": "Better error handling when wrong user/password is used and when self-signed certificates are used on the module"
+  },
+  "1.0.10": {
+    "en": "Improved error handling for timeouts and invalid responses from robonect module"
   }
 }
