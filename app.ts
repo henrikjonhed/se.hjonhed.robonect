@@ -2,7 +2,7 @@ import Homey from "homey";
 import { Log } from 'homey-log';
 
 class RobonectApp extends Homey.App {
-  logger: typeof Log = new Log({ homey: this.homey, options: {release: '1.0.8'} })
+  logger: typeof Log = new Log({ homey: this.homey, options: {release: '1.0.10'} })
 
   async setupLogging() {
     // @ts-ignore
