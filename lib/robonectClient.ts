@@ -15,6 +15,15 @@ export class NotReachableError extends Error {
   }
 }
 
+export class UnparseableResponseError extends Error {
+  response: any;
+  constructor(message: string, response: any) {
+    super(message);
+    this.name = "UnparseableResponseError";
+    this.response = response;
+  }
+}
+
 export interface TimerResponse {
   status: number; // 0: disabled, 1: active, 2: standby
   next: {
@@ -104,7 +113,7 @@ export class RobonectClient {
           throw new Error("Could not read data from Robonect, status code: " + response.statusCode)
         }
         if (!response.result) {
-          throw new Error("Unable to read data from Robonect");
+          throw new UnparseableResponseError("Unable to read data from Robonect", response);
         }
         return response.result!!;
       });
