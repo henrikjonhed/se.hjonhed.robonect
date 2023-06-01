@@ -14,7 +14,6 @@ class RobonectDevice extends Homey.Device {
   communicationTimer?: NodeJS.Timeout;
 
   onDiscoveryResult(discoveryResult: Homey.DiscoveryResult): boolean {
-    this.log(`onDiscovery: ${discoveryResult}, data:${this.getData().id}`);
     return discoveryResult.id === this.getData().id;
   }
 
