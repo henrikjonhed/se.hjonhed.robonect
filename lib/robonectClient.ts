@@ -88,6 +88,9 @@ export class RobonectClient {
         if (err && err.code === "ECONNREFUSED" || err.code === "ECONNRESET" || err.code === "EHOSTUNREACH") {
           throw new NotReachableError("Could not reach Robonect");
         }
+        if (err && err.statusCode == 401) {
+          throw new AuthorizationError("Unauthorized, wrong username or password");
+        }
         throw err;
       })
       .then((response: IRestResponse<StatusResponse>) => {
