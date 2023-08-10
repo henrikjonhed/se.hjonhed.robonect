@@ -179,6 +179,7 @@ class RobonectDevice extends Homey.Device {
       settings.password
     );
     await client.setMode(mode);
+    await this.pollData();
   }
 
   async startNewJob(duration_in_minutes: number) {
@@ -190,6 +191,7 @@ class RobonectDevice extends Homey.Device {
       settings.password
     );
     await client.startNewJob(duration_in_minutes);
+    await this.pollData();
   }
 
   async onSettings({
