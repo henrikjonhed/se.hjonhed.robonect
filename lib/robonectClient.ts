@@ -40,10 +40,10 @@ export interface StatusResponse {
     status: number;
     distance: number; // meter?
     stopped: boolean;
-    duration: number; // minutes in this mode?
+    duration: number; // seconds in this mode
     mode: number;
     battery: number; // percent
-    hours: number; // total run time
+    hours: number; // total mowing time in hours
   };
   timer: TimerResponse;
   blades: {
