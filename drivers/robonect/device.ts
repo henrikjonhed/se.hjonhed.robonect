@@ -12,6 +12,7 @@ import {
 class RobonectDevice extends Homey.Device {
   pollingInterval?: NodeJS.Timeout;
   communicationTimer?: NodeJS.Timeout;
+  lastCapturedExceptionMessage?: string;
 
   onDiscoveryResult(discoveryResult: Homey.DiscoveryResult): boolean {
     return discoveryResult.id === this.getData().id;
@@ -71,6 +72,16 @@ class RobonectDevice extends Homey.Device {
     await this.setSettings({ error_message: errorMessage });
   }
 
+  private async captureException(err: any) {
+    if (err.message === this.lastCapturedExceptionMessage) {
+      return;
+    }
+
+    // @ts-ignore
+    await this.homey.app.logger.captureException(err);
+    this.lastCapturedExceptionMessage = err.message;
+  }
+
   private async pollData() {
     try {
       const settings = this.getSettings();
@@ -114,8 +125,7 @@ class RobonectDevice extends Homey.Device {
       } else if (err instanceof NotReachableError) {
         return;
       }
-      // @ts-ignore
-      this.homey.app.logger.captureException(err);
+      await this.captureException(err);
     }
   }
 
