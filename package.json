@@ -5,7 +5,7 @@
   "scripts": {
     "build": "tsc",
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore .",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\""
+    "format": "prettier --write \"**/*.+(js|ts|json)\""
   },
   "devDependencies": {
     "@tsconfig/node12": "^1.0.11",
