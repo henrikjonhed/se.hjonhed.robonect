@@ -229,7 +229,8 @@
         "timer_status",
         "button.poll_now",
         "blade_quality",
-        "alarm_generic.stopped"
+        "alarm_generic.stopped",
+        "alarm_generic.error_active"
       ],
       "capabilitiesOptions": {
         "button.poll_now": {
@@ -253,6 +254,20 @@
           },
           "insightsTitleFalse": {
             "en": "Mower is no longer stopped"
+          }
+        },
+        "alarm_generic.error_active": {
+          "title": {
+            "en": "Error active"
+          },
+          "desc": {
+            "en": "Indicates if the mower has an error set or not."
+          },
+          "insightsTitleTrue": {
+            "en": "An error has been set, see device settings for details"
+          },
+          "insightsTitleFalse": {
+            "en": "No error is currently present"
           }
         }
       },

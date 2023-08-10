@@ -102,9 +102,11 @@ class RobonectDevice extends Homey.Device {
         this.log("setting warning: " + error.error_message);
         await this.setWarning(error.error_message);
         await this.updateCurrentErrorMessage(error.error_message);
+        this.setCapabilityValue("alarm_generic.error_active", true);
       } else {
         this.updateCurrentErrorMessage("No error is currently set");
         await this.unsetWarning();
+        this.setCapabilityValue("alarm_generic.error_active", false);
       }
 
       const { status, wlan, timer, health, blades } = statusResponse;
@@ -140,6 +142,9 @@ class RobonectDevice extends Homey.Device {
     }
     if (!this.hasCapability("alarm_generic.stopped")) {
       await this.addCapability("alarm_generic.stopped");
+    }
+    if (!this.hasCapability("alarm_generic.error_active")) {
+      await this.addCapability("alarm_generic.error_active");
     }
   }
 
