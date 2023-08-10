@@ -119,6 +119,12 @@ class RobonectDevice extends Homey.Device {
     }
   }
 
+  private async syncCapabilities() {
+    if (!this.hasCapability("button.poll_now")) {
+      await this.addCapability("button.poll_now");
+    }
+  }
+
   async onInit() {
     this.log("RobonectDevice has been initialized");
 
@@ -133,8 +139,13 @@ class RobonectDevice extends Homey.Device {
       },
     });
 
+    await this.syncCapabilities();
+
     this.registerCapabilityListener("mode", (mode: number) => {
       this.setMode(mode);
+    });
+    this.registerCapabilityListener("button.poll_now", async () => {
+      await this.pollData();
     });
 
     await this.pollData();

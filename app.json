@@ -226,8 +226,20 @@
         "status_mode",
         "mode",
         "signal",
-        "timer_status"
+        "timer_status",
+        "button.poll_now"
       ],
+      "capabilitiesOptions": {
+        "button.poll_now": {
+          "maintenanceAction": true,
+          "title": {
+            "en": "Fetch status now"
+          },
+          "desc": {
+            "en": "Fetch the current status of the mower right now instead of waiting for the next scheduled update."
+          }
+        }
+      },
       "platforms": [
         "local"
       ],
