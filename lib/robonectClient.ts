@@ -108,6 +108,9 @@ export class RobonectClient {
         if (err && err.code === "DEPTH_ZERO_SELF_SIGNED_CERT") {
           throw new NotReachableError("Could not reach Robonect, certificate error")
         }
+        if (err && err.message && err.message.includes("Request timeout")) {
+          throw new NotReachableError("Could not reach Robonect, timeout");
+        }
         throw err;
       })
       .then((response: IRestResponse<StatusResponse>) => {
