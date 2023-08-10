@@ -165,6 +165,11 @@ class RobonectDevice extends Homey.Device {
     }, settings.poll_interval * 60 * 1000);
   }
 
+  async onUninit() {
+    this.log("RobonectDevice has been uninitialized");
+    this.homey.clearInterval(this.pollingInterval);
+  }
+
   async setMode(mode: number) {
     this.log(`Setting mode to ${mode}`);
     const settings = this.getSettings();
