@@ -1,21 +1,24 @@
 import Homey from "homey";
-import { Log } from 'homey-log';
+import { Log } from "homey-log";
 
 class RobonectApp extends Homey.App {
-  logger?: typeof Log
+  logger?: typeof Log;
 
   async setupLogging() {
-    this.logger = new Log({ homey: this.homey, options: {release: this.homey.manifest.version} });
+    this.logger = new Log({
+      homey: this.homey,
+      options: { release: this.homey.manifest.version },
+    });
     // @ts-ignore
-    this.homeyLog = this.logger
+    this.homeyLog = this.logger;
 
-    const homeyId = await this.homey.cloud.getHomeyId()
+    const homeyId = await this.homey.cloud.getHomeyId();
     // @ts-ignore
-    this.homeyLog.setUser({id: homeyId})
+    this.homeyLog.setUser({ id: homeyId });
   }
 
   async onInit() {
-    await this.setupLogging()
+    await this.setupLogging();
     this.log("RobonectApp has been initialized");
   }
 }

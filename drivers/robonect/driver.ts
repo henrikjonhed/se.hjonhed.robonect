@@ -7,16 +7,26 @@ class RobonectDriver extends Homey.Driver {
    */
   async onInit() {
     this.log("RobonectDriver has been initialized");
-    this.homey.flow.getConditionCard("status_mode_condition").registerRunListener((args) => {
-      this.log(`Checking if ${args.status_mode} is equal to ${args.device.getCapabilityValue("status_mode")}`);
-      return args.status_mode === args.device.getCapabilityValue("status_mode");
-    });
+    this.homey.flow
+      .getConditionCard("status_mode_condition")
+      .registerRunListener((args) => {
+        this.log(
+          `Checking if ${
+            args.status_mode
+          } is equal to ${args.device.getCapabilityValue("status_mode")}`
+        );
+        return (
+          args.status_mode === args.device.getCapabilityValue("status_mode")
+        );
+      });
     this.homey.flow.getActionCard("set-mode-to").registerRunListener((args) => {
       args.device.setMode(Number(args.mode));
     });
-    this.homey.flow.getActionCard("start-new-job").registerRunListener((args) => {
-      args.device.startNewJob(args.duration);
-    });
+    this.homey.flow
+      .getActionCard("start-new-job")
+      .registerRunListener((args) => {
+        args.device.startNewJob(args.duration);
+      });
   }
 
   onPair(session: Homey.Driver.PairSession) {

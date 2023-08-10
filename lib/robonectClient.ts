@@ -103,10 +103,14 @@ export class RobonectClient {
           throw new NotReachableError("Could not reach Robonect");
         }
         if (err && err.statusCode == 401) {
-          throw new AuthorizationError("Unauthorized, wrong username or password");
+          throw new AuthorizationError(
+            "Unauthorized, wrong username or password"
+          );
         }
         if (err && err.code === "DEPTH_ZERO_SELF_SIGNED_CERT") {
-          throw new NotReachableError("Could not reach Robonect, certificate error")
+          throw new NotReachableError(
+            "Could not reach Robonect, certificate error"
+          );
         }
         if (err && err.message && err.message.includes("Request timeout")) {
           throw new NotReachableError("Could not reach Robonect, timeout");
@@ -115,13 +119,20 @@ export class RobonectClient {
       })
       .then((response: IRestResponse<StatusResponse>) => {
         if (response.statusCode === 401) {
-          throw new AuthorizationError("Unauthorized, wrong username or password");
-        }
-        else if (response.statusCode !== 200) {
-          throw new Error("Could not read data from Robonect, status code: " + response.statusCode)
+          throw new AuthorizationError(
+            "Unauthorized, wrong username or password"
+          );
+        } else if (response.statusCode !== 200) {
+          throw new Error(
+            "Could not read data from Robonect, status code: " +
+              response.statusCode
+          );
         }
         if (!response.result) {
-          throw new UnparseableResponseError("Unable to read data from Robonect", response);
+          throw new UnparseableResponseError(
+            "Unable to read data from Robonect",
+            response
+          );
         }
         return response.result!!;
       });
@@ -132,7 +143,7 @@ export class RobonectClient {
       0: "auto",
       1: "man",
       2: "home",
-      3: "eod"
+      3: "eod",
     };
     const newMode = modes[mode] || "unknown";
 
@@ -160,7 +171,7 @@ export class RobonectClient {
             cmd: "mode",
             mode: "job",
             remote_start: 0,
-            duration: length_in_minutes
+            duration: length_in_minutes,
           },
         },
       })
