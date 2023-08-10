@@ -24,15 +24,21 @@
       }
     }
   },
-  "platforms": ["local"],
-  "connectivity": ["lan"],
+  "platforms": [
+    "local"
+  ],
+  "connectivity": [
+    "lan"
+  ],
   "images": {
     "small": "{{driverAssetsPath}}/images/small.png",
     "large": "{{driverAssetsPath}}/images/large.png",
     "xlarge": "{{driverAssetsPath}}/images/xlarge.png"
   },
   "energy": {
-    "batteries": ["INTERNAL"]
+    "batteries": [
+      "INTERNAL"
+    ]
   },
   "discovery": "robonect-mdns",
   "pair": [
@@ -42,19 +48,31 @@
       "options": {
         "singular": true
       },
-      "navigation": { "next": "login_credentials" }
+      "navigation": {
+        "next": "login_credentials"
+      }
     },
     {
       "id": "login_credentials",
       "template": "login_credentials",
       "options": {
         "logo": "logo.png",
-        "usernameLabel": { "en": "User" },
-        "usernamePlaceholder": { "en": "User" },
-        "passwordLabel": { "en": "Password" },
-        "passwordPlaceholder": { "en": "Password" }
+        "usernameLabel": {
+          "en": "User"
+        },
+        "usernamePlaceholder": {
+          "en": "User"
+        },
+        "passwordLabel": {
+          "en": "Password"
+        },
+        "passwordPlaceholder": {
+          "en": "Password"
+        }
       },
-      "navigation": { "next": "add_device" }
+      "navigation": {
+        "next": "add_device"
+      }
     },
     {
       "id": "add_device"
