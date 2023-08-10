@@ -14,7 +14,8 @@
     "button.poll_now",
     "blade_quality",
     "alarm_generic.stopped",
-    "alarm_generic.error_active"
+    "alarm_generic.error_active",
+    "total_run_time"
   ],
   "capabilitiesOptions": {
     "button.poll_now": {

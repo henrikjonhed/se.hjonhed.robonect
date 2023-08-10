@@ -230,7 +230,8 @@
         "button.poll_now",
         "blade_quality",
         "alarm_generic.stopped",
-        "alarm_generic.error_active"
+        "alarm_generic.error_active",
+        "total_run_time"
       ],
       "capabilitiesOptions": {
         "button.poll_now": {
@@ -550,6 +551,24 @@
       "setable": false,
       "insights": true,
       "icon": "/assets/calendar.svg"
+    },
+    "total_run_time": {
+      "type": "number",
+      "uiComponent": "sensor",
+      "title": {
+        "en": "Total run time"
+      },
+      "desc": {
+        "en": "The total time that the mower has been operating."
+      },
+      "value": 0,
+      "units": {
+        "en": "h"
+      },
+      "getable": true,
+      "setable": false,
+      "insights": true,
+      "icon": "/assets/stopwatch.svg"
     }
   },
   "discovery": {

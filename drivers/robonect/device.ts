@@ -114,6 +114,7 @@ class RobonectDevice extends Homey.Device {
       this.setCapabilityValue("status_mode", status?.status.toString());
       this.setCapabilityValue("mode", status?.mode.toString());
       this.setCapabilityValue("alarm_generic.stopped", status?.stopped);
+      this.setCapabilityValue("total_run_time", status?.hours);
       this.setCapabilityValue("signal", wlan?.signal);
       this.setCapabilityValue("timer_status", this.getTimerStatusString(timer));
       this.setCapabilityValue("measure_temperature", health?.temperature);
@@ -145,6 +146,9 @@ class RobonectDevice extends Homey.Device {
     }
     if (!this.hasCapability("alarm_generic.error_active")) {
       await this.addCapability("alarm_generic.error_active");
+    }
+    if (!this.hasCapability("total_run_time")) {
+      await this.addCapability("total_run_time");
     }
   }
 
