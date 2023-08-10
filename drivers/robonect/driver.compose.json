@@ -11,7 +11,8 @@
     "mode",
     "signal",
     "timer_status",
-    "button.poll_now"
+    "button.poll_now",
+    "blade_quality"
   ],
   "capabilitiesOptions": {
     "button.poll_now": {

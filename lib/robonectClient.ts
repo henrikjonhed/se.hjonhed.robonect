@@ -47,7 +47,7 @@ export interface StatusResponse {
   };
   timer: TimerResponse;
   blades: {
-    quality: string; // unclear
+    quality: number; // percent
     hours: number;
     days: number;
   };

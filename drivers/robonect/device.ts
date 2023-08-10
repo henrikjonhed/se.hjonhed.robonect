@@ -107,7 +107,7 @@ class RobonectDevice extends Homey.Device {
         await this.unsetWarning();
       }
 
-      const { status, timer, health } = statusResponse;
+      const { status, timer, health, blades } = statusResponse;
       this.setCapabilityValue("measure_battery", status?.battery);
       this.setCapabilityValue("status_mode", status?.status.toString());
       this.setCapabilityValue("mode", status?.mode.toString());
@@ -115,6 +115,7 @@ class RobonectDevice extends Homey.Device {
       this.setCapabilityValue("timer_status", this.getTimerStatusString(timer));
       this.setCapabilityValue("measure_temperature", health?.temperature);
       this.setCapabilityValue("measure_humidity", health?.humidity);
+      this.setCapabilityValue("blade_quality", blades?.quality);
     } catch (err) {
       this.error(err);
       if (err instanceof AuthorizationError) {
@@ -132,6 +133,9 @@ class RobonectDevice extends Homey.Device {
   private async syncCapabilities() {
     if (!this.hasCapability("button.poll_now")) {
       await this.addCapability("button.poll_now");
+    }
+    if (!this.hasCapability("blade_quality")) {
+      await this.addCapability("blade_quality");
     }
   }
 

@@ -1,0 +1,18 @@
+{
+  "type": "number",
+  "uiComponent": "sensor",
+  "title": {
+    "en": "Blade quality"
+  },
+  "desc": {
+    "en": "The current estimated blade quality."
+  },
+  "value": 0,
+  "units": {
+    "en": "%"
+  },
+  "getable": true,
+  "setable": false,
+  "insights": true,
+  "icon": "/assets/razor.svg"
+}
