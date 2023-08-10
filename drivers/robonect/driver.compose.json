@@ -12,7 +12,8 @@
     "signal",
     "timer_status",
     "button.poll_now",
-    "blade_quality"
+    "blade_quality",
+    "alarm_generic.stopped"
   ],
   "capabilitiesOptions": {
     "button.poll_now": {
@@ -22,6 +23,20 @@
       },
       "desc": {
         "en": "Fetch the current status of the mower right now instead of waiting for the next scheduled update."
+      }
+    },
+    "alarm_generic.stopped": {
+      "title": {
+        "en": "Stopped"
+      },
+      "desc": {
+        "en": "The mower has stopped and needs to be manually enabled again."
+      },
+      "insightsTitleTrue": {
+        "en": "Mower stopped"
+      },
+      "insightsTitleFalse": {
+        "en": "Mower is no longer stopped"
       }
     }
   },
