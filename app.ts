@@ -2,9 +2,10 @@ import Homey from "homey";
 import { Log } from 'homey-log';
 
 class RobonectApp extends Homey.App {
-  logger: typeof Log = new Log({ homey: this.homey, options: {release: '1.0.10'} })
+  logger?: typeof Log
 
   async setupLogging() {
+    this.logger = new Log({ homey: this.homey, options: {release: this.homey.manifest.version} });
     // @ts-ignore
     this.homeyLog = this.logger
     const homeyId = await this.homey.cloud.getHomeyId()
