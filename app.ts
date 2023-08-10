@@ -8,9 +8,10 @@ class RobonectApp extends Homey.App {
     this.logger = new Log({ homey: this.homey, options: {release: this.homey.manifest.version} });
     // @ts-ignore
     this.homeyLog = this.logger
+
     const homeyId = await this.homey.cloud.getHomeyId()
     // @ts-ignore
-    this.homeyLog.setUser(homeyId)
+    this.homeyLog.setUser({id: homeyId})
   }
 
   async onInit() {
