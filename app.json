@@ -39,6 +39,111 @@
     "url": "https://github.com/henrikjonhed/se.hjonhed.robonect/issues"
   },
   "flow": {
+    "triggers": [
+      {
+        "id": "status_mode_changed",
+        "title": {
+          "en": "Status mode changed"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
+      }
+    ],
+    "conditions": [
+      {
+        "id": "status_mode_condition",
+        "title": {
+          "en": "Status mode is"
+        },
+        "titleFormatted": {
+          "en": "Status mode is [[status_mode]]"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          },
+          {
+            "name": "status_mode",
+            "type": "dropdown",
+            "values": [
+              {
+                "id": "0",
+                "title": {
+                  "en": "Detecting status"
+                }
+              },
+              {
+                "id": "1",
+                "title": {
+                  "en": "Parked"
+                }
+              },
+              {
+                "id": "2",
+                "title": {
+                  "en": "Mowing"
+                }
+              },
+              {
+                "id": "3",
+                "title": {
+                  "en": "Searching charging station"
+                }
+              },
+              {
+                "id": "4",
+                "title": {
+                  "en": "Charging"
+                }
+              },
+              {
+                "id": "5",
+                "title": {
+                  "en": "Searching"
+                }
+              },
+              {
+                "id": "7",
+                "title": {
+                  "en": "Error"
+                }
+              },
+              {
+                "id": "8",
+                "title": {
+                  "en": "Lost signal"
+                }
+              },
+              {
+                "id": "16",
+                "title": {
+                  "en": "Off"
+                }
+              },
+              {
+                "id": "17",
+                "title": {
+                  "en": "Sleeping"
+                }
+              },
+              {
+                "id": "99",
+                "title": {
+                  "en": "Unknown"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
     "actions": [
       {
         "id": "set-mode-to",
