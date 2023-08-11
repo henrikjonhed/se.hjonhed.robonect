@@ -34,5 +34,8 @@
   },
   "1.0.11": {
     "en": "Flow cards for status mode, capability for error, capability for manually stopped, capability for total run time, capability for blade quality"
+  },
+  "1.0.12": {
+    "en": "Fixed crash that happened when blade quality isn't used by Robonect"
   }
 }
