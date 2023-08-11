@@ -46,7 +46,7 @@ export interface StatusResponse {
     hours: number; // total mowing time in hours
   };
   timer: TimerResponse;
-  blades: {
+  blades?: {
     quality: number; // percent
     hours: number;
     days: number;

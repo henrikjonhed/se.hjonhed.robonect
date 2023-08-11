@@ -110,16 +110,24 @@ class RobonectDevice extends Homey.Device {
       }
 
       const { status, wlan, timer, health, blades } = statusResponse;
-      this.setCapabilityValue("measure_battery", status?.battery);
-      this.setCapabilityValue("status_mode", status?.status.toString());
-      this.setCapabilityValue("mode", status?.mode.toString());
-      this.setCapabilityValue("alarm_generic.stopped", status?.stopped);
-      this.setCapabilityValue("total_run_time", status?.hours);
-      this.setCapabilityValue("signal", wlan?.signal);
+      if (status) {
+        this.setCapabilityValue("measure_battery", status.battery);
+        this.setCapabilityValue("status_mode", status.status.toString());
+        this.setCapabilityValue("mode", status.mode.toString());
+        this.setCapabilityValue("alarm_generic.stopped", status.stopped);
+        this.setCapabilityValue("total_run_time", status.hours);
+      }
+      if (wlan) {
+        this.setCapabilityValue("signal", wlan.signal);
+      }
       this.setCapabilityValue("timer_status", this.getTimerStatusString(timer));
-      this.setCapabilityValue("measure_temperature", health?.temperature);
-      this.setCapabilityValue("measure_humidity", health?.humidity);
-      this.setCapabilityValue("blade_quality", blades?.quality);
+      if (health) {
+        this.setCapabilityValue("measure_temperature", health.temperature);
+        this.setCapabilityValue("measure_humidity", health.humidity);
+      }
+      if (blades) {
+        this.setCapabilityValue("blade_quality", blades.quality);
+      }
     } catch (err) {
       this.error(err);
       if (err instanceof AuthorizationError) {
