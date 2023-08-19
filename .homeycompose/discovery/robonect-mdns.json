@@ -4,5 +4,16 @@
     "name": "http",
     "protocol": "tcp"
   },
-  "id": "{{name}}"
+  "id": "{{name}}",
+  "conditions": [
+    [
+      {
+        "field": "name",
+        "match": {
+          "type": "regex",
+          "value": "^robonect-.*"
+        }
+      }
+    ]
+  ]
 }
