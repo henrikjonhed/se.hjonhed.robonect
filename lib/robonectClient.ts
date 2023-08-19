@@ -108,7 +108,11 @@ export class RobonectClient {
             "Unauthorized, wrong username or password"
           );
         }
-        if (err && err.code === "DEPTH_ZERO_SELF_SIGNED_CERT") {
+        if (
+          err &&
+          (err.code === "DEPTH_ZERO_SELF_SIGNED_CERT" ||
+            err.code === "CERT_HAS_EXPIRED")
+        ) {
           throw new NotReachableError(
             "Could not reach Robonect, certificate error"
           );
