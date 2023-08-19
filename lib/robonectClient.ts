@@ -95,10 +95,11 @@ export class RobonectClient {
       })
       .catch((err) => {
         if (
-          (err && err.code === "ECONNREFUSED") ||
-          err.code === "ECONNRESET" ||
-          err.code === "EHOSTUNREACH" ||
-          err.code === "ETIMEDOUT"
+          err &&
+          (err.code === "ECONNREFUSED" ||
+            err.code === "ECONNRESET" ||
+            err.code === "EHOSTUNREACH" ||
+            err.code === "ETIMEDOUT")
         ) {
           throw new NotReachableError("Could not reach Robonect");
         }
