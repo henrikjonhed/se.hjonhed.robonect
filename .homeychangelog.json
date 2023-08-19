@@ -37,5 +37,8 @@
   },
   "1.0.12": {
     "en": "Fixed crash that happened when blade quality isn't used by Robonect"
+  },
+  "1.0.13": {
+    "en": "Possible to add device manually by IP address"
   }
 }
