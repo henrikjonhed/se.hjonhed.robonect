@@ -1,4 +1,5 @@
 import Homey from "homey";
+// @ts-ignore
 import { Log } from "homey-log";
 
 class RobonectApp extends Homey.App {
