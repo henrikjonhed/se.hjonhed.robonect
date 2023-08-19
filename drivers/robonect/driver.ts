@@ -30,27 +30,50 @@ class RobonectDriver extends Homey.Driver {
   }
 
   onPair(session: Homey.Driver.PairSession) {
-    let device: any;
+    let device = {
+      name: "",
+      data: {
+        id: "",
+      },
+      settings: {
+        address: "",
+        username: "",
+        password: "",
+      },
+    };
 
     session.setHandler("list_devices", async () => {
       const discoveryStrategy = this.getDiscoveryStrategy();
       this.log(discoveryStrategy);
       const discoveryResults = discoveryStrategy.getDiscoveryResults();
       this.log(discoveryResults);
-      const devices = Object.values(discoveryResults).map((discoveryResult) => {
-        const mdnsDiscoveryResult =
-          discoveryResult as unknown as Homey.DiscoveryResultMDNSSD;
+      const devices = Object.values(discoveryResults)
+        .map((discoveryResult) => {
+          const mdnsDiscoveryResult =
+            discoveryResult as unknown as Homey.DiscoveryResultMDNSSD;
 
-        return {
-          name: mdnsDiscoveryResult.name,
-          data: {
-            id: mdnsDiscoveryResult.id,
-          },
-          settings: {
-            address: mdnsDiscoveryResult.address,
-          },
-        };
-      });
+          return {
+            name: mdnsDiscoveryResult.name,
+            data: {
+              id: mdnsDiscoveryResult.id,
+            },
+            settings: {
+              address: mdnsDiscoveryResult.address,
+            },
+          };
+        })
+        .filter((device) => {
+          // This is done by Homey SDK before presenting ths list to the
+          // user, but needed here to make zero length check of devices valid.
+          return !this.getDevices().some((existingDevice) => {
+            return existingDevice.getData().id === device.data.id;
+          });
+        });
+
+      if (devices.length === 0) {
+        await session.showView("address_and_credentials");
+      }
+
       return devices;
     });
 
@@ -59,20 +82,29 @@ class RobonectDriver extends Homey.Driver {
       device = selectedDevices[0];
     });
 
-    session.setHandler("login", async (data) => {
-      const { address } = device.settings;
-      this.log(`Logging in to ${address} with user ${data.username}`);
-      const client = new RobonectClient(address, data.username, data.password);
-      try {
-        await client.getStatus();
-        this.log("login successful");
-        device.settings.username = data.username;
-        device.settings.password = data.password;
-        return true;
-      } catch (err) {
-        this.error(err);
-      }
-      return false;
+    session.setHandler("get_device", async () => {
+      this.log(`get_device: ${device.settings.address}`);
+      return device;
+    });
+
+    session.setHandler("address_and_credentials", async (data) => {
+      this.log(`Logging in to ${data.address} with user ${data.username}`);
+
+      const client = new RobonectClient(
+        data.address,
+        data.username,
+        data.password
+      );
+
+      // Will throw if not successful
+      const statusResponse = await client.getStatus();
+
+      this.log("login successful");
+      device.name = statusResponse.name;
+      device.data.id = `robonect-${statusResponse.id}`;
+      device.settings.address = data.address;
+      device.settings.username = data.username;
+      device.settings.password = data.password;
     });
 
     session.setHandler("add_device", async () => {

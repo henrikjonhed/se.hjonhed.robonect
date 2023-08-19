@@ -297,29 +297,13 @@
             "singular": true
           },
           "navigation": {
-            "next": "login_credentials"
+            "next": "address_and_credentials"
           }
         },
         {
-          "id": "login_credentials",
-          "template": "login_credentials",
-          "options": {
-            "logo": "logo.png",
-            "usernameLabel": {
-              "en": "User"
-            },
-            "usernamePlaceholder": {
-              "en": "User"
-            },
-            "passwordLabel": {
-              "en": "Password"
-            },
-            "passwordPlaceholder": {
-              "en": "Password"
-            }
-          },
+          "id": "address_and_credentials",
           "navigation": {
-            "next": "add_device"
+            "prev": "list_devices"
           }
         },
         {
