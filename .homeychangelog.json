@@ -40,5 +40,8 @@
   },
   "1.0.13": {
     "en": "Possible to add device manually by IP address"
+  },
+  "1.0.14": {
+    "en": "Support for reading data from mowers that utilizes an external garage door."
   }
 }
