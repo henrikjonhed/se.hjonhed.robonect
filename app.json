@@ -510,6 +510,12 @@
           }
         },
         {
+          "id": "18",
+          "title": {
+            "en": "Waiting for door to open"
+          }
+        },
+        {
           "id": "99",
           "title": {
             "en": "Unknown"
