@@ -26,7 +26,7 @@ export class UnparseableResponseError extends Error {
 
 export interface TimerResponse {
   status: number; // 0: disabled, 1: active, 2: standby
-  next: {
+  next?: {
     date: string;
     time: string;
     unix: number;
