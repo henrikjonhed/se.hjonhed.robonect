@@ -1,0 +1,27 @@
+name: Homey App Validation
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: "npm"
+      - run: npm i -g homey
+      - run: npm i
+      - name: Enable write permission for .homeybuild
+        run: |
+          mkdir -p .homeybuild
+          chmod -R 777 .homeybuild
+      - name: Validate Homey App
+        run: homey app validate -l publish
