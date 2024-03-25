@@ -6,6 +6,7 @@
     "build": "tsc",
     "lint": "eslint --ext .js,.ts --ignore-path .gitignore .",
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
+    "format-check": "prettier --check \"**/*.+(js|ts|json)\"",
     "test": "jest --coverage"
   },
   "devDependencies": {
