@@ -1,5 +1,5 @@
 {
-  "plugins": ["@typescript-eslint"],
+  "plugins": ["@typescript-eslint", "prettier"],
   "extends": ["plugin:@typescript-eslint/recommended", "prettier"],
   "rules": {
     "@typescript-eslint/ban-ts-comment": "off"
