@@ -226,12 +226,12 @@ class RobonectDevice extends Homey.Device {
   }
 
   async onSettings({
-    oldSettings,
     newSettings,
     changedKeys,
   }: {
-    oldSettings: any;
-    newSettings: any;
+    newSettings: {
+      [key: string]: boolean | string | number | undefined | null;
+    };
     changedKeys: string[];
   }): Promise<string | void> {
     if (changedKeys.includes("poll_interval")) {
@@ -240,7 +240,7 @@ class RobonectDevice extends Homey.Device {
         async () => {
           await this.pollData();
         },
-        newSettings.poll_interval * 60 * 1000,
+        (newSettings as { poll_interval: number }).poll_interval * 60 * 1000,
       );
     }
   }
