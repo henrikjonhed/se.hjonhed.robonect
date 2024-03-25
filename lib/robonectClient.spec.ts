@@ -50,9 +50,7 @@ describe("RobonectClient", () => {
 
   describe("getStatus method", () => {
     it.skip("should throw UnparsableResponseError on empty response", async () => {
-      const scope = nock("http://localhost")
-        .get("/json?cmd=status")
-        .reply(200, {});
+      nock("http://localhost").get("/json?cmd=status").reply(200, {});
 
       const status = await client.getStatus();
 
@@ -60,7 +58,7 @@ describe("RobonectClient", () => {
     });
 
     it("should return a StatusResponse for a valid response", async () => {
-      const scope = nock("http://localhost")
+      nock("http://localhost")
         .get("/json?cmd=status")
         .reply(200, aStatusResponse);
 
@@ -69,7 +67,7 @@ describe("RobonectClient", () => {
     });
 
     it.skip("should throw UnparseableResponseError for responses without required fields", async () => {
-      const scope = nock("http://localhost")
+      nock("http://localhost")
         .get("/json?cmd=status")
         .reply(200, { unexpectedField: "Unexpected" });
 
@@ -85,46 +83,36 @@ describe("RobonectClient", () => {
     ])(
       "should throw NotReachableError for %s error code",
       async (errorCode) => {
-        const scope = nock("http://localhost")
-          .get("/json?cmd=status")
-          .replyWithError({
-            code: errorCode,
-          });
+        nock("http://localhost").get("/json?cmd=status").replyWithError({
+          code: errorCode,
+        });
 
         await expect(client.getStatus()).rejects.toThrow(NotReachableError);
       },
     );
 
     it("should throw NotReachableError for 'Request timeout' in error message", async () => {
-      const scope = nock("http://localhost")
-        .get("/json?cmd=status")
-        .replyWithError({
-          message: "Request timeout",
-        });
+      nock("http://localhost").get("/json?cmd=status").replyWithError({
+        message: "Request timeout",
+      });
 
       await expect(client.getStatus()).rejects.toThrow(NotReachableError);
     });
 
     it("should throw AuthorizationError for 401 response status", async () => {
-      const scope = nock("http://localhost")
-        .get("/json?cmd=status")
-        .reply(401, {});
+      nock("http://localhost").get("/json?cmd=status").reply(401, {});
 
       await expect(client.getStatus()).rejects.toThrow(AuthorizationError);
     });
 
     it("should throw Error for unknown response status codes", async () => {
-      const scope = nock("http://localhost")
-        .get("/json?cmd=status")
-        .reply(202, {});
+      nock("http://localhost").get("/json?cmd=status").reply(202, {});
 
       await expect(client.getStatus()).rejects.toThrow(Error);
     });
 
     it("should throw UnparseableResponseError when no response is available", async () => {
-      const scope = nock("http://localhost")
-        .get("/json?cmd=status")
-        .reply(200, undefined);
+      nock("http://localhost").get("/json?cmd=status").reply(200, undefined);
 
       await expect(client.getStatus()).rejects.toThrow(
         UnparseableResponseError,
@@ -134,7 +122,7 @@ describe("RobonectClient", () => {
     it("should rethrow unhandled errors", async () => {
       const unhandledError = new Error("will not be handled by client");
 
-      const scope = nock("http://localhost")
+      nock("http://localhost")
         .get("/json?cmd=status")
         .replyWithError(unhandledError);
 
