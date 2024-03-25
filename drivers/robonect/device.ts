@@ -19,7 +19,7 @@ class RobonectDevice extends Homey.Device {
   }
 
   async onDiscoveryAvailable(
-    discoveryResult: Homey.DiscoveryResult
+    discoveryResult: Homey.DiscoveryResult,
   ): Promise<void> {
     this.log(`onDiscoveryAvailable: ${discoveryResult}`);
     this.setAvailable();
@@ -36,9 +36,12 @@ class RobonectDevice extends Homey.Device {
 
   feedCommunicationWatchdog() {
     this.homey.clearTimeout(this.communicationTimer);
-    this.communicationTimer = this.homey.setTimeout(async () => {
-      await this.setUnavailable("Have not heard from device in 24 hours");
-    }, 1 * 1000 * 60 * 60 * 24); // 1 day
+    this.communicationTimer = this.homey.setTimeout(
+      async () => {
+        await this.setUnavailable("Have not heard from device in 24 hours");
+      },
+      1 * 1000 * 60 * 60 * 24,
+    ); // 1 day
   }
 
   getTimerStatusString(timerStatus?: TimerResponse) {
@@ -51,7 +54,7 @@ class RobonectDevice extends Homey.Device {
       case 2: {
         return timerStatus.next
           ? moment(
-              `${timerStatus.next.date} ${timerStatus.next.time}`
+              `${timerStatus.next.date} ${timerStatus.next.time}`,
             ).calendar()
           : "N/A";
       }
@@ -72,14 +75,17 @@ class RobonectDevice extends Homey.Device {
     await this.setSettings({ error_message: errorMessage });
   }
 
-  private async captureException(err: any) {
-    if (err.message === this.lastCapturedExceptionMessage) {
-      return;
+  private async captureException(error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === this.lastCapturedExceptionMessage) {
+        return;
+      } else {
+        this.lastCapturedExceptionMessage = error.message;
+      }
     }
 
     // @ts-ignore
-    await this.homey.app.logger.captureException(err);
-    this.lastCapturedExceptionMessage = err.message;
+    await this.homey.app.logger.captureException(error);
   }
 
   private async pollData() {
@@ -88,7 +94,7 @@ class RobonectDevice extends Homey.Device {
       const client = new RobonectClient(
         settings.address,
         settings.username,
-        settings.password
+        settings.password,
       );
 
       const statusResponse: StatusResponse = await client.getStatus();
@@ -128,11 +134,11 @@ class RobonectDevice extends Homey.Device {
       if (blades) {
         this.setCapabilityValue("blade_quality", blades.quality);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       this.error(err);
       if (err instanceof AuthorizationError) {
         await this.setUnavailable(
-          "Authorization error, please check your credentials"
+          "Authorization error, please check your credentials",
         );
         return;
       } else if (err instanceof NotReachableError) {
@@ -185,9 +191,12 @@ class RobonectDevice extends Homey.Device {
 
     await this.pollData();
     const settings = this.getSettings();
-    this.pollingInterval = this.homey.setInterval(async () => {
-      await this.pollData();
-    }, settings.poll_interval * 60 * 1000);
+    this.pollingInterval = this.homey.setInterval(
+      async () => {
+        await this.pollData();
+      },
+      settings.poll_interval * 60 * 1000,
+    );
   }
 
   async onUninit() {
@@ -201,7 +210,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.setMode(mode);
     await this.pollData();
@@ -213,26 +222,29 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.startNewJob(duration_in_minutes);
     await this.pollData();
   }
 
   async onSettings({
-    oldSettings,
     newSettings,
     changedKeys,
   }: {
-    oldSettings: any;
-    newSettings: any;
+    newSettings: {
+      [key: string]: boolean | string | number | undefined | null;
+    };
     changedKeys: string[];
   }): Promise<string | void> {
     if (changedKeys.includes("poll_interval")) {
       this.homey.clearInterval(this.pollingInterval);
-      this.homey.setInterval(async () => {
-        await this.pollData();
-      }, newSettings.poll_interval * 60 * 1000);
+      this.homey.setInterval(
+        async () => {
+          await this.pollData();
+        },
+        (newSettings as { poll_interval: number }).poll_interval * 60 * 1000,
+      );
     }
   }
 }

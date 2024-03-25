@@ -16,8 +16,8 @@ export class NotReachableError extends Error {
 }
 
 export class UnparseableResponseError extends Error {
-  response: any;
-  constructor(message: string, response: any) {
+  response: unknown;
+  constructor(message: string, response: unknown) {
     super(message);
     this.name = "UnparseableResponseError";
     this.response = response;
@@ -80,7 +80,7 @@ export class RobonectClient {
     this.client = new RestClient(
       "se.hjonhed.robonect",
       `http://${address}/json`,
-      [this.basicAuthHandler]
+      [this.basicAuthHandler],
     );
   }
 
@@ -105,7 +105,7 @@ export class RobonectClient {
         }
         if (err && err.statusCode == 401) {
           throw new AuthorizationError(
-            "Unauthorized, wrong username or password"
+            "Unauthorized, wrong username or password",
           );
         }
         if (
@@ -114,7 +114,7 @@ export class RobonectClient {
             err.code === "CERT_HAS_EXPIRED")
         ) {
           throw new NotReachableError(
-            "Could not reach Robonect, certificate error"
+            "Could not reach Robonect, certificate error",
           );
         }
         if (err && err.message && err.message.includes("Request timeout")) {
@@ -125,21 +125,21 @@ export class RobonectClient {
       .then((response: IRestResponse<StatusResponse>) => {
         if (response.statusCode === 401) {
           throw new AuthorizationError(
-            "Unauthorized, wrong username or password"
+            "Unauthorized, wrong username or password",
           );
         } else if (response.statusCode !== 200) {
           throw new Error(
             "Could not read data from Robonect, status code: " +
-              response.statusCode
+              response.statusCode,
           );
         }
         if (!response.result) {
           throw new UnparseableResponseError(
             "Unable to read data from Robonect",
-            response
+            response,
           );
         }
-        return response.result!!;
+        return response.result!;
       });
   }
 

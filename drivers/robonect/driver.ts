@@ -13,7 +13,7 @@ class RobonectDriver extends Homey.Driver {
         this.log(
           `Checking if ${
             args.status_mode
-          } is equal to ${args.device.getCapabilityValue("status_mode")}`
+          } is equal to ${args.device.getCapabilityValue("status_mode")}`,
         );
         return (
           args.status_mode === args.device.getCapabilityValue("status_mode")
@@ -93,7 +93,7 @@ class RobonectDriver extends Homey.Driver {
       const client = new RobonectClient(
         data.address,
         data.username,
-        data.password
+        data.password,
       );
 
       // Will throw if not successful
