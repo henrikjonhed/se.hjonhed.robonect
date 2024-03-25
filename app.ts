@@ -8,7 +8,10 @@ class RobonectApp extends Homey.App {
   async setupLogging() {
     this.logger = new Log({
       homey: this.homey,
-      options: { release: this.homey.manifest.version },
+      options: {
+        autoBreadcrumbs: true,
+        release: this.homey.manifest.version,
+      },
     });
     // @ts-ignore
     this.homeyLog = this.logger;
