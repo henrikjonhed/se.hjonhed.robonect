@@ -75,14 +75,17 @@ class RobonectDevice extends Homey.Device {
     await this.setSettings({ error_message: errorMessage });
   }
 
-  private async captureException(error: Error) {
-    if (error.message === this.lastCapturedExceptionMessage) {
-      return;
+  private async captureException(error: unknown) {
+    if (error instanceof Error) {
+      if (error.message === this.lastCapturedExceptionMessage) {
+        return;
+      } else {
+        this.lastCapturedExceptionMessage = error.message;
+      }
     }
 
     // @ts-ignore
     await this.homey.app.logger.captureException(error);
-    this.lastCapturedExceptionMessage = error.message;
   }
 
   private async pollData() {
@@ -131,7 +134,7 @@ class RobonectDevice extends Homey.Device {
       if (blades) {
         this.setCapabilityValue("blade_quality", blades.quality);
       }
-    } catch (err) {
+    } catch (err: unknown) {
       this.error(err);
       if (err instanceof AuthorizationError) {
         await this.setUnavailable(

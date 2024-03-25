@@ -16,8 +16,8 @@ export class NotReachableError extends Error {
 }
 
 export class UnparseableResponseError extends Error {
-  response: any;
-  constructor(message: string, response: any) {
+  response: unknown;
+  constructor(message: string, response: unknown) {
     super(message);
     this.name = "UnparseableResponseError";
     this.response = response;
