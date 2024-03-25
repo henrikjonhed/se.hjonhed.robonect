@@ -75,14 +75,14 @@ class RobonectDevice extends Homey.Device {
     await this.setSettings({ error_message: errorMessage });
   }
 
-  private async captureException(err: any) {
-    if (err.message === this.lastCapturedExceptionMessage) {
+  private async captureException(error: Error) {
+    if (error.message === this.lastCapturedExceptionMessage) {
       return;
     }
 
     // @ts-ignore
-    await this.homey.app.logger.captureException(err);
-    this.lastCapturedExceptionMessage = err.message;
+    await this.homey.app.logger.captureException(error);
+    this.lastCapturedExceptionMessage = error.message;
   }
 
   private async pollData() {

@@ -139,7 +139,7 @@ export class RobonectClient {
             response,
           );
         }
-        return response.result!!;
+        return response.result!;
       });
   }
 
