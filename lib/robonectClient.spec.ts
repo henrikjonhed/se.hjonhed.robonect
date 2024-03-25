@@ -92,7 +92,7 @@ describe("RobonectClient", () => {
           });
 
         await expect(client.getStatus()).rejects.toThrow(NotReachableError);
-      }
+      },
     );
 
     it("should throw NotReachableError for 'Request timeout' in error message", async () => {
@@ -127,7 +127,7 @@ describe("RobonectClient", () => {
         .reply(200, undefined);
 
       await expect(client.getStatus()).rejects.toThrow(
-        UnparseableResponseError
+        UnparseableResponseError,
       );
     });
 
@@ -158,7 +158,7 @@ describe("RobonectClient", () => {
           .reply(200, { successful: true });
 
         await expect(client.setMode(inputMode)).resolves.toBeUndefined();
-      }
+      },
     );
 
     it("should throw error if response is not successful ", async () => {
@@ -213,7 +213,7 @@ describe("RobonectClient", () => {
         .reply(200, { successful: false });
 
       await expect(client.startNewJob(testDuration)).rejects.toThrow(
-        "Could not start job"
+        "Could not start job",
       );
     });
   });
