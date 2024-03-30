@@ -19,6 +19,7 @@ jobs:
           cache: "npm"
       - run: npm i -g homey
       - run: npm i
+      - run: npm run build
       - name: Enable write permission for .homeybuild
         run: |
           mkdir -p .homeybuild

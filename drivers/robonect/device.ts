@@ -2,12 +2,12 @@ import Homey from "homey";
 import { DiscoveryResultMDNSSD } from "homey/lib/DiscoveryStrategy";
 import moment from "moment";
 import {
-  TimerResponse,
-  StatusResponse,
   RobonectClient,
   AuthorizationError,
   NotReachableError,
 } from "../../lib/robonectClient";
+import { TimerResponse } from "../../lib/TimerResponse";
+import { StatusResponse } from "../../lib/StatusResponse";
 
 class RobonectDevice extends Homey.Device {
   pollingInterval?: NodeJS.Timeout;

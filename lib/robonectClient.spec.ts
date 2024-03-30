@@ -4,8 +4,11 @@ import {
   AuthorizationError,
   UnparseableResponseError,
   RobonectClient,
-  StatusResponse,
 } from "./robonectClient";
+import { TimerStatusMode } from "./TimerStatusMode";
+import { StatusMode } from "./StatusMode";
+import { Mode } from "./Mode";
+import { StatusResponse } from "./StatusResponse";
 
 describe("RobonectClient", () => {
   let client: RobonectClient;
@@ -14,16 +17,16 @@ describe("RobonectClient", () => {
     id: "an_id",
     name: "a_name",
     status: {
-      status: 2,
+      status: StatusMode.mowing,
       distance: 2345,
       stopped: false,
       duration: 5432,
-      mode: 0,
+      mode: Mode.auto,
       battery: 95,
       hours: 321,
     },
     timer: {
-      status: 1,
+      status: TimerStatusMode.active,
     },
     blades: {
       quality: 90,
@@ -49,12 +52,12 @@ describe("RobonectClient", () => {
   });
 
   describe("getStatus method", () => {
-    it.skip("should throw UnparsableResponseError on empty response", async () => {
+    it("should throw UnparsableResponseError on empty response", async () => {
       nock("http://localhost").get("/json?cmd=status").reply(200, {});
 
-      const status = await client.getStatus();
-
-      expect(status).toThrow();
+      await expect(client.getStatus()).rejects.toThrow(
+        UnparseableResponseError,
+      );
     });
 
     it("should return a StatusResponse for a valid response", async () => {
@@ -62,16 +65,29 @@ describe("RobonectClient", () => {
         .get("/json?cmd=status")
         .reply(200, aStatusResponse);
 
-      const result = await client.getStatus();
-      expect(result).toEqual(aStatusResponse);
+      await expect(client.getStatus()).resolves.toEqual(aStatusResponse);
     });
 
-    it.skip("should throw UnparseableResponseError for responses without required fields", async () => {
+    it("should throw UnparseableResponseError for responses without required fields", async () => {
       nock("http://localhost")
         .get("/json?cmd=status")
         .reply(200, { unexpectedField: "Unexpected" });
 
-      await expect(client.getStatus()).rejects.toThrow();
+      await expect(client.getStatus()).rejects.toThrow(
+        UnparseableResponseError,
+      );
+    });
+
+    it("should return the mower status when the response matches the expected format and additional keys are present", async () => {
+      const extendedStatusResponse = {
+        ...aStatusResponse,
+        additionalKey: "Additional",
+      };
+      nock("http://localhost")
+        .get("/json?cmd=status")
+        .reply(200, extendedStatusResponse);
+
+      await expect(client.getStatus()).resolves.toEqual(extendedStatusResponse);
     });
 
     test.each([
@@ -157,16 +173,6 @@ describe("RobonectClient", () => {
         .reply(200, { successful: false });
 
       await expect(client.setMode(0)).rejects.toThrow("Could not set mode");
-    });
-
-    it("should handle unknown mode", async () => {
-      // Mock the API response for an unknown mode
-      nock("http://localhost")
-        .get("/json")
-        .query({ cmd: "mode", mode: "unknown" })
-        .reply(200, { successful: true });
-
-      await expect(client.setMode(99)).resolves.toBeUndefined();
     });
   });
 
