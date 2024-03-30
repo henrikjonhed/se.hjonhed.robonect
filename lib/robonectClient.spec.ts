@@ -4,8 +4,11 @@ import {
   AuthorizationError,
   UnparseableResponseError,
   RobonectClient,
-  StatusResponse,
 } from "./robonectClient";
+import { TimerStatusMode } from "./TimerStatusMode";
+import { StatusMode } from "./StatusMode";
+import { Mode } from "./Mode";
+import { StatusResponse } from "./StatusResponse";
 
 describe("RobonectClient", () => {
   let client: RobonectClient;
@@ -14,16 +17,16 @@ describe("RobonectClient", () => {
     id: "an_id",
     name: "a_name",
     status: {
-      status: 2,
+      status: StatusMode.mowing,
       distance: 2345,
       stopped: false,
       duration: 5432,
-      mode: 0,
+      mode: Mode.auto,
       battery: 95,
       hours: 321,
     },
     timer: {
-      status: 1,
+      status: TimerStatusMode.active,
     },
     blades: {
       quality: 90,
@@ -62,8 +65,7 @@ describe("RobonectClient", () => {
         .get("/json?cmd=status")
         .reply(200, aStatusResponse);
 
-      const result = await client.getStatus();
-      expect(result).toEqual(aStatusResponse);
+      await expect(client.getStatus()).resolves.toEqual(aStatusResponse);
     });
 
     it.skip("should throw UnparseableResponseError for responses without required fields", async () => {
@@ -157,16 +159,6 @@ describe("RobonectClient", () => {
         .reply(200, { successful: false });
 
       await expect(client.setMode(0)).rejects.toThrow("Could not set mode");
-    });
-
-    it("should handle unknown mode", async () => {
-      // Mock the API response for an unknown mode
-      nock("http://localhost")
-        .get("/json")
-        .query({ cmd: "mode", mode: "unknown" })
-        .reply(200, { successful: true });
-
-      await expect(client.setMode(99)).resolves.toBeUndefined();
     });
   });
 

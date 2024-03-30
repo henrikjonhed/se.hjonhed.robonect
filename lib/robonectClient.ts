@@ -1,5 +1,7 @@
 import { IRequestOptions, RestClient, IRestResponse } from "typed-rest-client";
 import { BasicCredentialHandler } from "typed-rest-client/Handlers";
+import { StatusResponse } from "./StatusResponse";
+import { Mode } from "./Mode";
 
 export class AuthorizationError extends Error {
   constructor(message: string) {
@@ -22,49 +24,6 @@ export class UnparseableResponseError extends Error {
     this.name = "UnparseableResponseError";
     this.response = response;
   }
-}
-
-export interface TimerResponse {
-  status: number; // 0: disabled, 1: active, 2: standby
-  next?: {
-    date: string;
-    time: string;
-    unix: number;
-  };
-}
-
-export interface StatusResponse {
-  name: string;
-  id: string;
-  status: {
-    status: number;
-    distance: number; // meter?
-    stopped: boolean;
-    duration: number; // seconds in this mode
-    mode: number;
-    battery: number; // percent
-    hours: number; // total mowing time in hours
-  };
-  timer: TimerResponse;
-  blades?: {
-    quality: number; // percent
-    hours: number;
-    days: number;
-  };
-  wlan: {
-    signal: number; // rssi
-  };
-  health: {
-    temperature: number;
-    humidity: number;
-  };
-  error?: {
-    error_code: number;
-    error_message: string;
-    date: string;
-    time: string;
-  };
-  successful: boolean;
 }
 
 interface CommandResponse {
@@ -143,14 +102,14 @@ export class RobonectClient {
       });
   }
 
-  async setMode(mode: number): Promise<void> {
-    const modes: { [key: number]: string } = {
-      0: "auto",
-      1: "man",
-      2: "home",
-      3: "eod",
+  async setMode(mode: Mode): Promise<void> {
+    const modes: { [key in Mode]: string } = {
+      [Mode.auto]: "auto",
+      [Mode.manual]: "man",
+      [Mode.home]: "home",
+      [Mode.end_of_day]: "eod",
     };
-    const newMode = modes[mode] || "unknown";
+    const newMode = modes[mode];
 
     return this.client
       .get<CommandResponse>("", <IRequestOptions>{
