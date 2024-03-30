@@ -43,5 +43,8 @@
   },
   "1.0.14": {
     "en": "Support for reading data from mowers that utilizes an external garage door."
+  },
+  "1.0.15": {
+    "en": "Don't crash the app on invalid status values"
   }
 }
