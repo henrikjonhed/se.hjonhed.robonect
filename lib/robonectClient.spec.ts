@@ -52,12 +52,12 @@ describe("RobonectClient", () => {
   });
 
   describe("getStatus method", () => {
-    it.skip("should throw UnparsableResponseError on empty response", async () => {
+    it("should throw UnparsableResponseError on empty response", async () => {
       nock("http://localhost").get("/json?cmd=status").reply(200, {});
 
-      const status = await client.getStatus();
-
-      expect(status).toThrow();
+      await expect(client.getStatus()).rejects.toThrow(
+        UnparseableResponseError,
+      );
     });
 
     it("should return a StatusResponse for a valid response", async () => {
@@ -68,12 +68,26 @@ describe("RobonectClient", () => {
       await expect(client.getStatus()).resolves.toEqual(aStatusResponse);
     });
 
-    it.skip("should throw UnparseableResponseError for responses without required fields", async () => {
+    it("should throw UnparseableResponseError for responses without required fields", async () => {
       nock("http://localhost")
         .get("/json?cmd=status")
         .reply(200, { unexpectedField: "Unexpected" });
 
-      await expect(client.getStatus()).rejects.toThrow();
+      await expect(client.getStatus()).rejects.toThrow(
+        UnparseableResponseError,
+      );
+    });
+
+    it("should return the mower status when the response matches the expected format and additional keys are present", async () => {
+      const extendedStatusResponse = {
+        ...aStatusResponse,
+        additionalKey: "Additional",
+      };
+      nock("http://localhost")
+        .get("/json?cmd=status")
+        .reply(200, extendedStatusResponse);
+
+      await expect(client.getStatus()).resolves.toEqual(extendedStatusResponse);
     });
 
     test.each([

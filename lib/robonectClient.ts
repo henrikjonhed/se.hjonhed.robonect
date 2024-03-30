@@ -1,5 +1,7 @@
 import { IRequestOptions, RestClient, IRestResponse } from "typed-rest-client";
 import { BasicCredentialHandler } from "typed-rest-client/Handlers";
+import Ajv, { ValidateFunction } from "ajv";
+import * as RobonectSchema from "./gen/robonectSchema.json";
 import { StatusResponse } from "./StatusResponse";
 import { Mode } from "./Mode";
 
@@ -33,6 +35,8 @@ interface CommandResponse {
 export class RobonectClient {
   private basicAuthHandler: BasicCredentialHandler;
   private client: RestClient;
+  private ajv: Ajv;
+  private statusResponseValidator: ValidateFunction<StatusResponse>;
 
   constructor(address: string, username: string, password: string) {
     this.basicAuthHandler = new BasicCredentialHandler(username, password);
@@ -41,6 +45,9 @@ export class RobonectClient {
       `http://${address}/json`,
       [this.basicAuthHandler],
     );
+    this.ajv = new Ajv();
+    this.statusResponseValidator =
+      this.ajv.compile<StatusResponse>(RobonectSchema);
   }
 
   async getStatus(): Promise<StatusResponse> {
@@ -95,6 +102,13 @@ export class RobonectClient {
         if (!response.result) {
           throw new UnparseableResponseError(
             "Unable to read data from Robonect",
+            response,
+          );
+        }
+
+        if (!this.statusResponseValidator(response.result!)) {
+          throw new UnparseableResponseError(
+            "Unable to parse data from Robonect",
             response,
           );
         }
