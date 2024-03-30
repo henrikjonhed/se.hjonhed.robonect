@@ -88,6 +88,19 @@ class RobonectDevice extends Homey.Device {
     await this.homey.app.logger.captureException(error);
   }
 
+  private setEnumCapabilityValue(capability: string, value: string) {
+    return this.setCapabilityValue(capability, value).catch((err) => {
+      this.error(err);
+      if (
+        err &&
+        err instanceof Error &&
+        err.message.includes("InvalidEnumValueError")
+      ) {
+        return Promise.resolve();
+      }
+    });
+  }
+
   private async pollData() {
     try {
       const settings = this.getSettings();
@@ -118,15 +131,18 @@ class RobonectDevice extends Homey.Device {
       const { status, wlan, timer, health, blades } = statusResponse;
       if (status) {
         this.setCapabilityValue("measure_battery", status.battery);
-        this.setCapabilityValue("status_mode", status.status.toString());
-        this.setCapabilityValue("mode", status.mode.toString());
+        this.setEnumCapabilityValue("status_mode", status.status.toString());
+        this.setEnumCapabilityValue("mode", status.mode.toString());
         this.setCapabilityValue("alarm_generic.stopped", status.stopped);
         this.setCapabilityValue("total_run_time", status.hours);
       }
       if (wlan) {
         this.setCapabilityValue("signal", wlan.signal);
       }
-      this.setCapabilityValue("timer_status", this.getTimerStatusString(timer));
+      this.setEnumCapabilityValue(
+        "timer_status",
+        this.getTimerStatusString(timer),
+      );
       if (health) {
         this.setCapabilityValue("measure_temperature", health.temperature);
         this.setCapabilityValue("measure_humidity", health.humidity);
