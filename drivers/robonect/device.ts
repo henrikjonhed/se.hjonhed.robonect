@@ -267,6 +267,18 @@ class RobonectDevice extends Homey.Device {
     await this.pollData();
   }
 
+  async stop() {
+    this.log("Stopping mower");
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password
+    );
+    await client.stop();
+    await this.pollData();
+  }
+
   async onSettings({
     newSettings,
     changedKeys,

@@ -209,4 +209,24 @@ describe("RobonectClient", () => {
       );
     });
   });
+
+  describe("stop method", () => {
+    it("should successfully stop the mower", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "stop" })
+        .reply(200, { successful: true });
+
+      await expect(client.stop()).resolves.toBeUndefined();
+    });
+
+    it("should throw error if response is not successful", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "stop" })
+        .reply(200, { successful: false });
+
+      await expect(client.stop()).rejects.toThrow("Could not stop mower");
+    });
+  });
 });

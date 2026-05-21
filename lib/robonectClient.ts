@@ -103,4 +103,23 @@ export class RobonectClient {
         }
       });
   }
+
+  async stop(): Promise<void> {
+    return this.client
+      .get<CommandResponse>("", <IRequestOptions>{
+        queryParameters: {
+          params: {
+            cmd: "stop",
+          },
+        },
+      })
+      .catch(handleAuthorizationError)
+      .catch(handleNotReachableError)
+      .then(resultFromResponse)
+      .then((result: CommandResponse) => {
+        if (!result.successful) {
+          throw new Error("Could not stop mower");
+        }
+      });
+  }
 }

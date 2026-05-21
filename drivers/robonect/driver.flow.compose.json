@@ -148,6 +148,16 @@
           "name": "duration"
         }
       ]
+    },
+    {
+      "id": "stop",
+      "title": {
+        "en": "Stop"
+      },
+      "titleFormatted": {
+        "en": "Stop the mower"
+      },
+      "args": []
     }
   ]
 }
