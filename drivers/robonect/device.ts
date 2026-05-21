@@ -21,7 +21,7 @@ class RobonectDevice extends Homey.Device {
   }
 
   async onDiscoveryAvailable(
-    discoveryResult: Homey.DiscoveryResult
+    discoveryResult: Homey.DiscoveryResult,
   ): Promise<void> {
     const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
     this.log("onDiscoveryAvailable", {
@@ -36,7 +36,7 @@ class RobonectDevice extends Homey.Device {
   }
 
   async onDiscoveryAddressChanged(
-    discoveryResult: Homey.DiscoveryResult
+    discoveryResult: Homey.DiscoveryResult,
   ): Promise<void> {
     const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
     this.log("onDiscoveryAddressChanged", {
@@ -55,7 +55,7 @@ class RobonectDevice extends Homey.Device {
       async () => {
         await this.setUnavailable("Have not heard from device in 24 hours");
       },
-      1 * 1000 * 60 * 60 * 24
+      1 * 1000 * 60 * 60 * 24,
     ); // 1 day
   }
 
@@ -69,7 +69,7 @@ class RobonectDevice extends Homey.Device {
       case 2: {
         return timerStatus.next
           ? moment(
-              `${timerStatus.next.date} ${timerStatus.next.time}`
+              `${timerStatus.next.date} ${timerStatus.next.time}`,
             ).calendar()
           : "N/A";
       }
@@ -135,7 +135,7 @@ class RobonectDevice extends Homey.Device {
       const client = new RobonectClient(
         settings.address,
         settings.username,
-        settings.password
+        settings.password,
       );
 
       const statusResponse: StatusResponse = await client.getStatus();
@@ -161,7 +161,7 @@ class RobonectDevice extends Homey.Device {
         await this.setCapabilityValue("measure_battery", status.battery);
         await this.setEnumCapabilityValue(
           "status_mode",
-          status.status.toString()
+          status.status.toString(),
         );
         await this.setEnumCapabilityValue("mode", status.mode.toString());
         await this.setCapabilityValue("alarm_generic.stopped", status.stopped);
@@ -172,12 +172,12 @@ class RobonectDevice extends Homey.Device {
       }
       await this.setEnumCapabilityValue(
         "timer_status",
-        this.getTimerStatusString(timer)
+        this.getTimerStatusString(timer),
       );
       if (health) {
         await this.setCapabilityValue(
           "measure_temperature",
-          health.temperature
+          health.temperature,
         );
         await this.setCapabilityValue("measure_humidity", health.humidity);
       }
@@ -188,7 +188,7 @@ class RobonectDevice extends Homey.Device {
       this.error(err);
       if (err instanceof AuthorizationError) {
         await this.setUnavailable(
-          "Authorization error, please check your credentials"
+          "Authorization error, please check your credentials",
         );
         return;
       } else if (err instanceof NotReachableError) {
@@ -270,7 +270,7 @@ class RobonectDevice extends Homey.Device {
       async () => {
         await this.pollData();
       },
-      settings.poll_interval * 60 * 1000
+      settings.poll_interval * 60 * 1000,
     );
   }
 
@@ -285,7 +285,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.setMode(mode);
     await this.pollData();
@@ -297,7 +297,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.startNewJob(duration_in_minutes);
     await this.pollData();
@@ -309,7 +309,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.start();
     await this.pollData();
@@ -321,7 +321,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.stop();
     await this.pollData();
@@ -333,7 +333,7 @@ class RobonectDevice extends Homey.Device {
     const client = new RobonectClient(
       settings.address,
       settings.username,
-      settings.password
+      settings.password,
     );
     await client.clearError();
     await this.pollData();
@@ -354,7 +354,7 @@ class RobonectDevice extends Homey.Device {
         async () => {
           await this.pollData();
         },
-        (newSettings as { poll_interval: number }).poll_interval * 60 * 1000
+        (newSettings as { poll_interval: number }).poll_interval * 60 * 1000,
       );
     }
   }

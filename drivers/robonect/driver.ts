@@ -29,16 +29,12 @@ class RobonectDriver extends Homey.Driver {
       .registerRunListener(async (args) => {
         await args.device.startNewJob(args.duration);
       });
-    this.homey.flow
-      .getActionCard("start")
-      .registerRunListener(async (args) => {
-        await args.device.start();
-      });
-    this.homey.flow
-      .getActionCard("stop")
-      .registerRunListener(async (args) => {
-        await args.device.stop();
-      });
+    this.homey.flow.getActionCard("start").registerRunListener(async (args) => {
+      await args.device.start();
+    });
+    this.homey.flow.getActionCard("stop").registerRunListener(async (args) => {
+      await args.device.stop();
+    });
     this.homey.flow
       .getActionCard("clear-error")
       .registerRunListener(async (args) => {
