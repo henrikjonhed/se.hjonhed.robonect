@@ -220,13 +220,13 @@ describe("RobonectClient", () => {
       await expect(client.stop()).resolves.toBeUndefined();
     });
 
-    it("should throw error if response is not successful", async () => {
+    it("should accept an unsuccessful response because the mower may still stop asynchronously", async () => {
       nock("http://localhost")
         .get("/json")
         .query({ cmd: "stop" })
         .reply(200, { successful: false });
 
-      await expect(client.stop()).rejects.toThrow("Could not stop mower");
+      await expect(client.stop()).resolves.toBeUndefined();
     });
   });
 

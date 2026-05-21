@@ -135,11 +135,7 @@ export class RobonectClient {
       .catch(handleAuthorizationError)
       .catch(handleNotReachableError)
       .then(resultFromResponse)
-      .then((result: CommandResponse) => {
-        if (!result.successful) {
-          throw new Error("Could not stop mower");
-        }
-      });
+      .then(() => undefined);
   }
 
   async clearError(): Promise<void> {
