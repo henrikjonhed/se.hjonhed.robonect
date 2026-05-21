@@ -1,10 +1,9 @@
 import nock from "nock";
-import {
-  NotReachableError,
-  AuthorizationError,
-  UnparseableResponseError,
-  RobonectClient,
-} from "./robonectClient";
+import { RobonectClient } from "./robonectClient";
+import { UnparseableResponseError } from "./UnparseableResponseError";
+import { EmptyResponseError } from "./EmptyResponseError";
+import { AuthorizationError } from "./AuthorizationError";
+import { NotReachableError } from "./NotReachableError";
 import { TimerStatusMode } from "./TimerStatusMode";
 import { StatusMode } from "./StatusMode";
 import { Mode } from "./Mode";
@@ -127,12 +126,10 @@ describe("RobonectClient", () => {
       await expect(client.getStatus()).rejects.toThrow(Error);
     });
 
-    it("should throw UnparseableResponseError when no response is available", async () => {
+    it("should throw EmptyResponseError when no response is available", async () => {
       nock("http://localhost").get("/json?cmd=status").reply(200, undefined);
 
-      await expect(client.getStatus()).rejects.toThrow(
-        UnparseableResponseError,
-      );
+      await expect(client.getStatus()).rejects.toThrow(EmptyResponseError);
     });
 
     it("should rethrow unhandled errors", async () => {
@@ -208,6 +205,68 @@ describe("RobonectClient", () => {
 
       await expect(client.startNewJob(testDuration)).rejects.toThrow(
         "Could not start job",
+      );
+    });
+  });
+
+  describe("stop method", () => {
+    it("should successfully stop the mower", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "stop" })
+        .reply(200, { successful: true });
+
+      await expect(client.stop()).resolves.toBeUndefined();
+    });
+
+    it("should accept an unsuccessful response because the mower may still stop asynchronously", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "stop" })
+        .reply(200, { successful: false });
+
+      await expect(client.stop()).resolves.toBeUndefined();
+    });
+  });
+
+  describe("start method", () => {
+    it("should successfully start the mower", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "start" })
+        .reply(200, { successful: true });
+
+      await expect(client.start()).resolves.toBeUndefined();
+    });
+
+    it("should throw error if response is not successful", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "start" })
+        .reply(200, { successful: false });
+
+      await expect(client.start()).rejects.toThrow("Could not start mower");
+    });
+  });
+
+  describe("clearError method", () => {
+    it("should successfully clear the mower error", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "error" })
+        .reply(200, { successful: true });
+
+      await expect(client.clearError()).resolves.toBeUndefined();
+    });
+
+    it("should throw error if response is not successful", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "error" })
+        .reply(200, { successful: false });
+
+      await expect(client.clearError()).rejects.toThrow(
+        "Could not clear mower error",
       );
     });
   });

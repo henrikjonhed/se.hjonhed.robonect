@@ -1,13 +1,12 @@
 import Homey from "homey";
 import { DiscoveryResultMDNSSD } from "homey/lib/DiscoveryStrategy";
 import moment from "moment";
-import {
-  RobonectClient,
-  AuthorizationError,
-  NotReachableError,
-} from "../../lib/robonectClient";
+import { RobonectClient } from "../../lib/robonectClient";
+import { AuthorizationError } from "../../lib/AuthorizationError";
 import { TimerResponse } from "../../lib/TimerResponse";
 import { StatusResponse } from "../../lib/StatusResponse";
+import { NotReachableError } from "../../lib/NotReachableError";
+import { EmptyResponseError } from "../../lib/EmptyResponseError";
 
 class RobonectDevice extends Homey.Device {
   pollingInterval?: NodeJS.Timeout;
@@ -15,22 +14,39 @@ class RobonectDevice extends Homey.Device {
   lastCapturedExceptionMessage?: string;
 
   onDiscoveryResult(discoveryResult: Homey.DiscoveryResult): boolean {
-    return discoveryResult.id === this.getData().id;
+    const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
+    return (
+      discoveryResult.id === this.getData().id ||
+      mdnsDiscoveryResult.address === this.getSetting("address")
+    );
   }
 
   async onDiscoveryAvailable(
     discoveryResult: Homey.DiscoveryResult,
   ): Promise<void> {
-    this.log(`onDiscoveryAvailable: ${discoveryResult}`);
-    this.setAvailable();
-    this.setSettings({
-      address: (discoveryResult as DiscoveryResultMDNSSD).address,
+    const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
+    this.log("onDiscoveryAvailable", {
+      id: mdnsDiscoveryResult.id,
+      name: mdnsDiscoveryResult.name,
+      address: mdnsDiscoveryResult.address,
+    });
+    await this.setAvailable();
+    await this.setSettings({
+      address: mdnsDiscoveryResult.address,
     });
   }
 
-  onDiscoveryAddressChanged(discoveryResult: Homey.DiscoveryResult): void {
-    this.setSettings({
-      address: (discoveryResult as DiscoveryResultMDNSSD).address,
+  async onDiscoveryAddressChanged(
+    discoveryResult: Homey.DiscoveryResult,
+  ): Promise<void> {
+    const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
+    this.log("onDiscoveryAddressChanged", {
+      id: mdnsDiscoveryResult.id,
+      name: mdnsDiscoveryResult.name,
+      address: mdnsDiscoveryResult.address,
+    });
+    await this.setSettings({
+      address: mdnsDiscoveryResult.address,
     });
   }
 
@@ -57,6 +73,9 @@ class RobonectDevice extends Homey.Device {
               `${timerStatus.next.date} ${timerStatus.next.time}`,
             ).calendar()
           : "N/A";
+      }
+      case 3: {
+        return "Manual override";
       }
     }
   }
@@ -121,34 +140,40 @@ class RobonectDevice extends Homey.Device {
         this.log("setting warning: " + error.error_message);
         await this.setWarning(error.error_message);
         await this.updateCurrentErrorMessage(error.error_message);
-        this.setCapabilityValue("alarm_generic.error_active", true);
+        await this.setCapabilityValue("alarm_generic.error_active", true);
       } else {
-        this.updateCurrentErrorMessage("No error is currently set");
+        await this.updateCurrentErrorMessage("No error is currently set");
         await this.unsetWarning();
-        this.setCapabilityValue("alarm_generic.error_active", false);
+        await this.setCapabilityValue("alarm_generic.error_active", false);
       }
 
       const { status, wlan, timer, health, blades } = statusResponse;
       if (status) {
-        this.setCapabilityValue("measure_battery", status.battery);
-        this.setEnumCapabilityValue("status_mode", status.status.toString());
-        this.setEnumCapabilityValue("mode", status.mode.toString());
-        this.setCapabilityValue("alarm_generic.stopped", status.stopped);
-        this.setCapabilityValue("total_run_time", status.hours);
+        await this.setCapabilityValue("measure_battery", status.battery);
+        await this.setEnumCapabilityValue(
+          "status_mode",
+          status.status.toString(),
+        );
+        await this.setEnumCapabilityValue("mode", status.mode.toString());
+        await this.setCapabilityValue("alarm_generic.stopped", status.stopped);
+        await this.setCapabilityValue("total_run_time", status.hours);
       }
       if (wlan) {
-        this.setCapabilityValue("signal", wlan.signal);
+        await this.setCapabilityValue("signal", wlan.signal);
       }
-      this.setEnumCapabilityValue(
+      await this.setEnumCapabilityValue(
         "timer_status",
         this.getTimerStatusString(timer),
       );
       if (health) {
-        this.setCapabilityValue("measure_temperature", health.temperature);
-        this.setCapabilityValue("measure_humidity", health.humidity);
+        await this.setCapabilityValue(
+          "measure_temperature",
+          health.temperature,
+        );
+        await this.setCapabilityValue("measure_humidity", health.humidity);
       }
       if (blades) {
-        this.setCapabilityValue("blade_quality", blades.quality);
+        await this.setCapabilityValue("blade_quality", blades.quality);
       }
     } catch (err: unknown) {
       this.error(err);
@@ -157,7 +182,10 @@ class RobonectDevice extends Homey.Device {
           "Authorization error, please check your credentials",
         );
         return;
-      } else if (err instanceof NotReachableError) {
+      } else if (
+        err instanceof NotReachableError ||
+        err instanceof EmptyResponseError
+      ) {
         return;
       }
       await this.captureException(err);
@@ -165,8 +193,20 @@ class RobonectDevice extends Homey.Device {
   }
 
   private async syncCapabilities() {
-    if (!this.hasCapability("button.poll_now")) {
-      await this.addCapability("button.poll_now");
+    if (!this.hasCapability("button_start")) {
+      await this.addCapability("button_start");
+    }
+    if (!this.hasCapability("button_stop")) {
+      await this.addCapability("button_stop");
+    }
+    if (!this.hasCapability("button_override_start")) {
+      await this.addCapability("button_override_start");
+    }
+    if (!this.hasCapability("button_clear_error")) {
+      await this.addCapability("button_clear_error");
+    }
+    if (!this.hasCapability("button_refetch_status")) {
+      await this.addCapability("button_refetch_status");
     }
     if (!this.hasCapability("blade_quality")) {
       await this.addCapability("blade_quality");
@@ -198,10 +238,23 @@ class RobonectDevice extends Homey.Device {
 
     await this.syncCapabilities();
 
-    this.registerCapabilityListener("mode", (mode: number) => {
-      this.setMode(mode);
+    this.registerCapabilityListener("mode", async (mode: number) => {
+      this.setMode(mode).catch(this.error);
     });
-    this.registerCapabilityListener("button.poll_now", async () => {
+    this.registerCapabilityListener("button_start", async () => {
+      await this.start();
+    });
+    this.registerCapabilityListener("button_stop", async () => {
+      await this.stop();
+    });
+    this.registerCapabilityListener("button_override_start", async () => {
+      const settings = this.getSettings();
+      await this.startNewJob(settings.job_duration || 30);
+    });
+    this.registerCapabilityListener("button_clear_error", async () => {
+      await this.clearError();
+    });
+    this.registerCapabilityListener("button_refetch_status", async () => {
       await this.pollData();
     });
 
@@ -244,6 +297,42 @@ class RobonectDevice extends Homey.Device {
     await this.pollData();
   }
 
+  async start() {
+    this.log("Starting mower");
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password,
+    );
+    await client.start();
+    await this.pollData();
+  }
+
+  async stop() {
+    this.log("Stopping mower");
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password,
+    );
+    await client.stop();
+    await this.pollData();
+  }
+
+  async clearError() {
+    this.log("Clearing mower error");
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password,
+    );
+    await client.clearError();
+    await this.pollData();
+  }
+
   async onSettings({
     newSettings,
     changedKeys,
@@ -255,7 +344,7 @@ class RobonectDevice extends Homey.Device {
   }): Promise<string | void> {
     if (changedKeys.includes("poll_interval")) {
       this.homey.clearInterval(this.pollingInterval);
-      this.homey.setInterval(
+      this.pollingInterval = this.homey.setInterval(
         async () => {
           await this.pollData();
         },

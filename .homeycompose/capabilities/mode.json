@@ -7,7 +7,7 @@
   "desc": {
     "en": "The current mower mode"
   },
-  "value": "home",
+  "value": "2",
   "values": [
     {
       "id": "0",

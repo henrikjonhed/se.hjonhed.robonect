@@ -1,0 +1,13 @@
+{
+  "type": "boolean",
+  "uiComponent": "button",
+  "title": {
+    "en": "Start"
+  },
+  "desc": {
+    "en": "Start the mower."
+  },
+  "getable": false,
+  "setable": true,
+  "icon": "/assets/play.svg"
+}

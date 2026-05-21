@@ -1,0 +1,13 @@
+{
+  "type": "boolean",
+  "uiComponent": "button",
+  "title": {
+    "en": "Stop"
+  },
+  "desc": {
+    "en": "Stop the mower."
+  },
+  "getable": false,
+  "setable": true,
+  "icon": "/assets/stop.svg"
+}

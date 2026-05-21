@@ -46,5 +46,11 @@
   },
   "1.0.15": {
     "en": "Don't crash the app on invalid status values"
+  },
+  "1.1.0": {
+    "en": "Added buttons for start, stop, clear error, place job and refetch. Added actions for start, stop and clear error. Minor bug fixes as well."
+  },
+  "1.1.1": {
+    "en": "Minor bugfix"
   }
 }

@@ -148,6 +148,36 @@
           "name": "duration"
         }
       ]
+    },
+    {
+      "id": "stop",
+      "title": {
+        "en": "Stop"
+      },
+      "titleFormatted": {
+        "en": "Stop the mower"
+      },
+      "args": []
+    },
+    {
+      "id": "start",
+      "title": {
+        "en": "Start"
+      },
+      "titleFormatted": {
+        "en": "Start the mower"
+      },
+      "args": []
+    },
+    {
+      "id": "clear-error",
+      "title": {
+        "en": "Clear error"
+      },
+      "titleFormatted": {
+        "en": "Clear mower error"
+      },
+      "args": []
     }
   ]
 }

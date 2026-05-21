@@ -1,7 +1,7 @@
 {
   "_comment": "This file is generated. Please edit .homeycompose/app.json instead.",
   "id": "se.hjonhed.robonect",
-  "version": "1.0.15",
+  "version": "1.1.1",
   "compatibility": ">=5.0.0",
   "sdk": 3,
   "platforms": [
@@ -210,6 +210,54 @@
             "name": "duration"
           }
         ]
+      },
+      {
+        "id": "stop",
+        "title": {
+          "en": "Stop"
+        },
+        "titleFormatted": {
+          "en": "Stop the mower"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
+      },
+      {
+        "id": "start",
+        "title": {
+          "en": "Start"
+        },
+        "titleFormatted": {
+          "en": "Start the mower"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
+      },
+      {
+        "id": "clear-error",
+        "title": {
+          "en": "Clear error"
+        },
+        "titleFormatted": {
+          "en": "Clear mower error"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
       }
     ]
   },
@@ -225,22 +273,57 @@
         "measure_temperature",
         "status_mode",
         "mode",
+        "button_start",
+        "button_stop",
+        "button_override_start",
+        "button_clear_error",
+        "button_refetch_status",
         "signal",
         "timer_status",
-        "button.poll_now",
         "blade_quality",
         "alarm_generic.stopped",
         "alarm_generic.error_active",
         "total_run_time"
       ],
       "capabilitiesOptions": {
-        "button.poll_now": {
-          "maintenanceAction": true,
+        "button_start": {
           "title": {
-            "en": "Fetch status now"
+            "en": "Start"
           },
           "desc": {
-            "en": "Fetch the current status of the mower right now instead of waiting for the next scheduled update."
+            "en": "Start the mower."
+          }
+        },
+        "button_stop": {
+          "title": {
+            "en": "Stop"
+          },
+          "desc": {
+            "en": "Stop the mower."
+          }
+        },
+        "button_override_start": {
+          "title": {
+            "en": "Override start"
+          },
+          "desc": {
+            "en": "Manually start an override job for the duration configured in settings."
+          }
+        },
+        "button_clear_error": {
+          "title": {
+            "en": "Clear error"
+          },
+          "desc": {
+            "en": "Clear the mower error status."
+          }
+        },
+        "button_refetch_status": {
+          "title": {
+            "en": "Re-fetch status"
+          },
+          "desc": {
+            "en": "Re-fetch the current mower status right now instead of waiting for the next scheduled update."
           }
         },
         "alarm_generic.stopped": {
@@ -325,6 +408,19 @@
           }
         },
         {
+          "id": "job_duration",
+          "type": "number",
+          "value": 30,
+          "min": 1,
+          "max": 1440,
+          "label": {
+            "en": "Override start duration (minutes)"
+          },
+          "hint": {
+            "en": "The duration used by the Override start device button."
+          }
+        },
+        {
           "id": "address",
           "type": "text",
           "label": {
@@ -382,6 +478,71 @@
       "insights": true,
       "icon": "/assets/razor.svg"
     },
+    "button_clear_error": {
+      "type": "boolean",
+      "uiComponent": "button",
+      "title": {
+        "en": "Clear error"
+      },
+      "desc": {
+        "en": "Clear the mower error status."
+      },
+      "getable": false,
+      "setable": true,
+      "icon": "/assets/capabilities/button.clear_error.svg"
+    },
+    "button_override_start": {
+      "type": "boolean",
+      "uiComponent": "button",
+      "title": {
+        "en": "Override start"
+      },
+      "desc": {
+        "en": "Manually start an override job for the duration configured in settings."
+      },
+      "getable": false,
+      "setable": true,
+      "icon": "/assets/capabilities/button.override_start.svg"
+    },
+    "button_refetch_status": {
+      "type": "boolean",
+      "uiComponent": "button",
+      "title": {
+        "en": "Re-fetch status"
+      },
+      "desc": {
+        "en": "Re-fetch the current mower status right now instead of waiting for the next scheduled update."
+      },
+      "getable": false,
+      "setable": true,
+      "icon": "/assets/capabilities/button.refetch_status.svg"
+    },
+    "button_start": {
+      "type": "boolean",
+      "uiComponent": "button",
+      "title": {
+        "en": "Start"
+      },
+      "desc": {
+        "en": "Start the mower."
+      },
+      "getable": false,
+      "setable": true,
+      "icon": "/assets/play.svg"
+    },
+    "button_stop": {
+      "type": "boolean",
+      "uiComponent": "button",
+      "title": {
+        "en": "Stop"
+      },
+      "desc": {
+        "en": "Stop the mower."
+      },
+      "getable": false,
+      "setable": true,
+      "icon": "/assets/stop.svg"
+    },
     "mode": {
       "type": "enum",
       "uiComponent": "picker",
@@ -391,7 +552,7 @@
       "desc": {
         "en": "The current mower mode"
       },
-      "value": "home",
+      "value": "2",
       "values": [
         {
           "id": "0",
