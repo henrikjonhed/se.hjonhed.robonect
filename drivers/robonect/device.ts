@@ -266,7 +266,7 @@ class RobonectDevice extends Homey.Device {
   }): Promise<string | void> {
     if (changedKeys.includes("poll_interval")) {
       this.homey.clearInterval(this.pollingInterval);
-      this.homey.setInterval(
+      this.pollingInterval = this.homey.setInterval(
         async () => {
           await this.pollData();
         },
