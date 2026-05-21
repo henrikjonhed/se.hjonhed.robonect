@@ -279,6 +279,18 @@ class RobonectDevice extends Homey.Device {
     await this.pollData();
   }
 
+  async clearError() {
+    this.log("Clearing mower error");
+    const settings = this.getSettings();
+    const client = new RobonectClient(
+      settings.address,
+      settings.username,
+      settings.password
+    );
+    await client.clearError();
+    await this.pollData();
+  }
+
   async onSettings({
     newSettings,
     changedKeys,

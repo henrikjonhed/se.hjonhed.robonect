@@ -229,4 +229,26 @@ describe("RobonectClient", () => {
       await expect(client.stop()).rejects.toThrow("Could not stop mower");
     });
   });
+
+  describe("clearError method", () => {
+    it("should successfully clear the mower error", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "error" })
+        .reply(200, { successful: true });
+
+      await expect(client.clearError()).resolves.toBeUndefined();
+    });
+
+    it("should throw error if response is not successful", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "error" })
+        .reply(200, { successful: false });
+
+      await expect(client.clearError()).rejects.toThrow(
+        "Could not clear mower error",
+      );
+    });
+  });
 });

@@ -34,6 +34,11 @@ class RobonectDriver extends Homey.Driver {
       .registerRunListener(async (args) => {
         await args.device.stop();
       });
+    this.homey.flow
+      .getActionCard("clear-error")
+      .registerRunListener(async (args) => {
+        await args.device.clearError();
+      });
   }
 
   onPair(session: Homey.Driver.PairSession) {

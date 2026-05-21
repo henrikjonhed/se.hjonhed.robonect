@@ -226,6 +226,22 @@
             "filter": "driver_id=robonect"
           }
         ]
+      },
+      {
+        "id": "clear-error",
+        "title": {
+          "en": "Clear error"
+        },
+        "titleFormatted": {
+          "en": "Clear mower error"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
       }
     ]
   },

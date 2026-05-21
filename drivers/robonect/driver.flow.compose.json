@@ -158,6 +158,16 @@
         "en": "Stop the mower"
       },
       "args": []
+    },
+    {
+      "id": "clear-error",
+      "title": {
+        "en": "Clear error"
+      },
+      "titleFormatted": {
+        "en": "Clear mower error"
+      },
+      "args": []
     }
   ]
 }

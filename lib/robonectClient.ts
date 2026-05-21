@@ -122,4 +122,23 @@ export class RobonectClient {
         }
       });
   }
+
+  async clearError(): Promise<void> {
+    return this.client
+      .get<CommandResponse>("", <IRequestOptions>{
+        queryParameters: {
+          params: {
+            cmd: "error",
+          },
+        },
+      })
+      .catch(handleAuthorizationError)
+      .catch(handleNotReachableError)
+      .then(resultFromResponse)
+      .then((result: CommandResponse) => {
+        if (!result.successful) {
+          throw new Error("Could not clear mower error");
+        }
+      });
+  }
 }
