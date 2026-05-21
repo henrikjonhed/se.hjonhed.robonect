@@ -228,6 +228,22 @@
         ]
       },
       {
+        "id": "start",
+        "title": {
+          "en": "Start"
+        },
+        "titleFormatted": {
+          "en": "Start the mower"
+        },
+        "args": [
+          {
+            "type": "device",
+            "name": "device",
+            "filter": "driver_id=robonect"
+          }
+        ]
+      },
+      {
         "id": "clear-error",
         "title": {
           "en": "Clear error"

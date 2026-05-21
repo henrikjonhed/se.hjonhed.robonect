@@ -230,6 +230,26 @@ describe("RobonectClient", () => {
     });
   });
 
+  describe("start method", () => {
+    it("should successfully start the mower", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "start" })
+        .reply(200, { successful: true });
+
+      await expect(client.start()).resolves.toBeUndefined();
+    });
+
+    it("should throw error if response is not successful", async () => {
+      nock("http://localhost")
+        .get("/json")
+        .query({ cmd: "start" })
+        .reply(200, { successful: false });
+
+      await expect(client.start()).rejects.toThrow("Could not start mower");
+    });
+  });
+
   describe("clearError method", () => {
     it("should successfully clear the mower error", async () => {
       nock("http://localhost")

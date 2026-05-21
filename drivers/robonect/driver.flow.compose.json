@@ -160,6 +160,16 @@
       "args": []
     },
     {
+      "id": "start",
+      "title": {
+        "en": "Start"
+      },
+      "titleFormatted": {
+        "en": "Start the mower"
+      },
+      "args": []
+    },
+    {
       "id": "clear-error",
       "title": {
         "en": "Clear error"
