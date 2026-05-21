@@ -23,18 +23,29 @@ class RobonectDevice extends Homey.Device {
   async onDiscoveryAvailable(
     discoveryResult: Homey.DiscoveryResult
   ): Promise<void> {
-    this.log(`onDiscoveryAvailable: ${discoveryResult}`);
+    const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
+    this.log("onDiscoveryAvailable", {
+      id: mdnsDiscoveryResult.id,
+      name: mdnsDiscoveryResult.name,
+      address: mdnsDiscoveryResult.address,
+    });
     await this.setAvailable();
     await this.setSettings({
-      address: (discoveryResult as DiscoveryResultMDNSSD).address,
+      address: mdnsDiscoveryResult.address,
     });
   }
 
   async onDiscoveryAddressChanged(
     discoveryResult: Homey.DiscoveryResult
   ): Promise<void> {
+    const mdnsDiscoveryResult = discoveryResult as DiscoveryResultMDNSSD;
+    this.log("onDiscoveryAddressChanged", {
+      id: mdnsDiscoveryResult.id,
+      name: mdnsDiscoveryResult.name,
+      address: mdnsDiscoveryResult.address,
+    });
     await this.setSettings({
-      address: (discoveryResult as DiscoveryResultMDNSSD).address,
+      address: mdnsDiscoveryResult.address,
     });
   }
 
