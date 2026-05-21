@@ -1,5 +1,5 @@
 import { IRestResponse } from "typed-rest-client";
-import { UnparseableResponseError } from "./UnparseableResponseError";
+import { EmptyResponseError } from "./EmptyResponseError";
 
 export function resultFromResponse<T>(response: IRestResponse<T>): T {
   if (response.statusCode !== 200) {
@@ -8,7 +8,7 @@ export function resultFromResponse<T>(response: IRestResponse<T>): T {
     );
   }
   if (!response.result) {
-    throw new UnparseableResponseError(
+    throw new EmptyResponseError(
       "Unable to read data from Robonect",
       response,
     );

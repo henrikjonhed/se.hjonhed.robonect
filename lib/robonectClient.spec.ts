@@ -1,6 +1,7 @@
 import nock from "nock";
 import { RobonectClient } from "./robonectClient";
 import { UnparseableResponseError } from "./UnparseableResponseError";
+import { EmptyResponseError } from "./EmptyResponseError";
 import { AuthorizationError } from "./AuthorizationError";
 import { NotReachableError } from "./NotReachableError";
 import { TimerStatusMode } from "./TimerStatusMode";
@@ -125,12 +126,10 @@ describe("RobonectClient", () => {
       await expect(client.getStatus()).rejects.toThrow(Error);
     });
 
-    it("should throw UnparseableResponseError when no response is available", async () => {
+    it("should throw EmptyResponseError when no response is available", async () => {
       nock("http://localhost").get("/json?cmd=status").reply(200, undefined);
 
-      await expect(client.getStatus()).rejects.toThrow(
-        UnparseableResponseError,
-      );
+      await expect(client.getStatus()).rejects.toThrow(EmptyResponseError);
     });
 
     it("should rethrow unhandled errors", async () => {

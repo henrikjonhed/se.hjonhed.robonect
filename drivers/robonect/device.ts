@@ -6,6 +6,7 @@ import { AuthorizationError } from "../../lib/AuthorizationError";
 import { TimerResponse } from "../../lib/TimerResponse";
 import { StatusResponse } from "../../lib/StatusResponse";
 import { NotReachableError } from "../../lib/NotReachableError";
+import { EmptyResponseError } from "../../lib/EmptyResponseError";
 
 class RobonectDevice extends Homey.Device {
   pollingInterval?: NodeJS.Timeout;
@@ -119,16 +120,6 @@ class RobonectDevice extends Homey.Device {
     });
   }
 
-  private handleRobonectClientError(error: unknown) {
-    if (error instanceof AuthorizationError) {
-      this.setUnavailable("Authorization error, please check your credentials");
-      return;
-    } else if (error instanceof NotReachableError) {
-      return;
-    }
-    this.captureException(error);
-  }
-
   private async pollData() {
     try {
       const settings = this.getSettings();
@@ -191,7 +182,10 @@ class RobonectDevice extends Homey.Device {
           "Authorization error, please check your credentials",
         );
         return;
-      } else if (err instanceof NotReachableError) {
+      } else if (
+        err instanceof NotReachableError ||
+        err instanceof EmptyResponseError
+      ) {
         return;
       }
       await this.captureException(err);
