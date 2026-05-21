@@ -1,0 +1,13 @@
+{
+  "type": "boolean",
+  "uiComponent": "button",
+  "title": {
+    "en": "Re-fetch status"
+  },
+  "desc": {
+    "en": "Re-fetch the current mower status right now instead of waiting for the next scheduled update."
+  },
+  "getable": false,
+  "setable": true,
+  "icon": "/assets/capabilities/button.refetch_status.svg"
+}

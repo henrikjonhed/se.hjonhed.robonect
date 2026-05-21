@@ -188,8 +188,20 @@ class RobonectDevice extends Homey.Device {
   }
 
   private async syncCapabilities() {
-    if (!this.hasCapability("button.poll_now")) {
-      await this.addCapability("button.poll_now");
+    if (!this.hasCapability("button_start")) {
+      await this.addCapability("button_start");
+    }
+    if (!this.hasCapability("button_stop")) {
+      await this.addCapability("button_stop");
+    }
+    if (!this.hasCapability("button_override_start")) {
+      await this.addCapability("button_override_start");
+    }
+    if (!this.hasCapability("button_clear_error")) {
+      await this.addCapability("button_clear_error");
+    }
+    if (!this.hasCapability("button_refetch_status")) {
+      await this.addCapability("button_refetch_status");
     }
     if (!this.hasCapability("blade_quality")) {
       await this.addCapability("blade_quality");
@@ -224,7 +236,20 @@ class RobonectDevice extends Homey.Device {
     this.registerCapabilityListener("mode", async (mode: number) => {
       this.setMode(mode).catch(this.error);
     });
-    this.registerCapabilityListener("button.poll_now", async () => {
+    this.registerCapabilityListener("button_start", async () => {
+      await this.start();
+    });
+    this.registerCapabilityListener("button_stop", async () => {
+      await this.stop();
+    });
+    this.registerCapabilityListener("button_override_start", async () => {
+      const settings = this.getSettings();
+      await this.startNewJob(settings.job_duration || 30);
+    });
+    this.registerCapabilityListener("button_clear_error", async () => {
+      await this.clearError();
+    });
+    this.registerCapabilityListener("button_refetch_status", async () => {
       await this.pollData();
     });
 

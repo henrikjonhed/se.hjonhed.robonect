@@ -1,0 +1,13 @@
+{
+  "type": "boolean",
+  "uiComponent": "button",
+  "title": {
+    "en": "Override start"
+  },
+  "desc": {
+    "en": "Manually start an override job for the duration configured in settings."
+  },
+  "getable": false,
+  "setable": true,
+  "icon": "/assets/capabilities/button.override_start.svg"
+}

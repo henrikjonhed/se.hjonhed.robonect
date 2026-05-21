@@ -1,0 +1,13 @@
+{
+  "type": "boolean",
+  "uiComponent": "button",
+  "title": {
+    "en": "Clear error"
+  },
+  "desc": {
+    "en": "Clear the mower error status."
+  },
+  "getable": false,
+  "setable": true,
+  "icon": "/assets/capabilities/button.clear_error.svg"
+}
