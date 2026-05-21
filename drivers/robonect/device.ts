@@ -132,34 +132,40 @@ class RobonectDevice extends Homey.Device {
         this.log("setting warning: " + error.error_message);
         await this.setWarning(error.error_message);
         await this.updateCurrentErrorMessage(error.error_message);
-        this.setCapabilityValue("alarm_generic.error_active", true);
+        await this.setCapabilityValue("alarm_generic.error_active", true);
       } else {
-        this.updateCurrentErrorMessage("No error is currently set");
+        await this.updateCurrentErrorMessage("No error is currently set");
         await this.unsetWarning();
-        this.setCapabilityValue("alarm_generic.error_active", false);
+        await this.setCapabilityValue("alarm_generic.error_active", false);
       }
 
       const { status, wlan, timer, health, blades } = statusResponse;
       if (status) {
-        this.setCapabilityValue("measure_battery", status.battery);
-        this.setEnumCapabilityValue("status_mode", status.status.toString());
-        this.setEnumCapabilityValue("mode", status.mode.toString());
-        this.setCapabilityValue("alarm_generic.stopped", status.stopped);
-        this.setCapabilityValue("total_run_time", status.hours);
+        await this.setCapabilityValue("measure_battery", status.battery);
+        await this.setEnumCapabilityValue(
+          "status_mode",
+          status.status.toString()
+        );
+        await this.setEnumCapabilityValue("mode", status.mode.toString());
+        await this.setCapabilityValue("alarm_generic.stopped", status.stopped);
+        await this.setCapabilityValue("total_run_time", status.hours);
       }
       if (wlan) {
-        this.setCapabilityValue("signal", wlan.signal);
+        await this.setCapabilityValue("signal", wlan.signal);
       }
-      this.setEnumCapabilityValue(
+      await this.setEnumCapabilityValue(
         "timer_status",
         this.getTimerStatusString(timer)
       );
       if (health) {
-        this.setCapabilityValue("measure_temperature", health.temperature);
-        this.setCapabilityValue("measure_humidity", health.humidity);
+        await this.setCapabilityValue(
+          "measure_temperature",
+          health.temperature
+        );
+        await this.setCapabilityValue("measure_humidity", health.humidity);
       }
       if (blades) {
-        this.setCapabilityValue("blade_quality", blades.quality);
+        await this.setCapabilityValue("blade_quality", blades.quality);
       }
     } catch (err: unknown) {
       this.error(err);
