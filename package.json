@@ -9,6 +9,7 @@
     "lint-fix": "eslint --ext .js,.ts --ignore-path .gitignore --fix .",
     "format": "prettier --write \"**/*.+(js|ts|json)\"",
     "format-check": "prettier --check \"**/*.+(js|ts|json)\"",
+    "pretest": "npm run generate-json-schema",
     "test": "jest --coverage"
   },
   "devDependencies": {
