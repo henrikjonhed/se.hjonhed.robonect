@@ -1,10 +1,8 @@
 import nock from "nock";
-import {
-  NotReachableError,
-  AuthorizationError,
-  UnparseableResponseError,
-  RobonectClient,
-} from "./robonectClient";
+import { RobonectClient } from "./robonectClient";
+import { UnparseableResponseError } from "./UnparseableResponseError";
+import { AuthorizationError } from "./AuthorizationError";
+import { NotReachableError } from "./NotReachableError";
 import { TimerStatusMode } from "./TimerStatusMode";
 import { StatusMode } from "./StatusMode";
 import { Mode } from "./Mode";

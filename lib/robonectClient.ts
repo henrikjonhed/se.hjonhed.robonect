@@ -1,32 +1,13 @@
-import { IRequestOptions, RestClient, IRestResponse } from "typed-rest-client";
+import { IRequestOptions, RestClient } from "typed-rest-client";
 import { BasicCredentialHandler } from "typed-rest-client/Handlers";
 import Ajv, { ValidateFunction } from "ajv";
 import * as RobonectSchema from "./gen/robonectSchema.json";
 import { StatusResponse } from "./StatusResponse";
 import { Mode } from "./Mode";
-
-export class AuthorizationError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "AuthorizationError";
-  }
-}
-
-export class NotReachableError extends Error {
-  constructor(message: string) {
-    super(message);
-    this.name = "NotReachableError";
-  }
-}
-
-export class UnparseableResponseError extends Error {
-  response: unknown;
-  constructor(message: string, response: unknown) {
-    super(message);
-    this.name = "UnparseableResponseError";
-    this.response = response;
-  }
-}
+import { UnparseableResponseError } from "./UnparseableResponseError";
+import { handleAuthorizationError } from "./handleAuthorizationError";
+import { handleNotReachableError } from "./handleNotReachableError";
+import { resultFromResponse } from "./resultFromResponse";
 
 interface CommandResponse {
   successful: boolean;
@@ -59,60 +40,17 @@ export class RobonectClient {
           },
         },
       })
-      .catch((err) => {
-        if (
-          err &&
-          (err.code === "ECONNREFUSED" ||
-            err.code === "ECONNRESET" ||
-            err.code === "EHOSTUNREACH" ||
-            err.code === "ETIMEDOUT")
-        ) {
-          throw new NotReachableError("Could not reach Robonect");
-        }
-        if (err && err.statusCode == 401) {
-          throw new AuthorizationError(
-            "Unauthorized, wrong username or password",
-          );
-        }
-        if (
-          err &&
-          (err.code === "DEPTH_ZERO_SELF_SIGNED_CERT" ||
-            err.code === "CERT_HAS_EXPIRED")
-        ) {
-          throw new NotReachableError(
-            "Could not reach Robonect, certificate error",
-          );
-        }
-        if (err && err.message && err.message.includes("Request timeout")) {
-          throw new NotReachableError("Could not reach Robonect, timeout");
-        }
-        throw err;
-      })
-      .then((response: IRestResponse<StatusResponse>) => {
-        if (response.statusCode === 401) {
-          throw new AuthorizationError(
-            "Unauthorized, wrong username or password",
-          );
-        } else if (response.statusCode !== 200) {
-          throw new Error(
-            "Could not read data from Robonect, status code: " +
-              response.statusCode,
-          );
-        }
-        if (!response.result) {
-          throw new UnparseableResponseError(
-            "Unable to read data from Robonect",
-            response,
-          );
-        }
-
-        if (!this.statusResponseValidator(response.result!)) {
+      .catch(handleAuthorizationError)
+      .catch(handleNotReachableError)
+      .then(resultFromResponse)
+      .then((result: StatusResponse) => {
+        if (!this.statusResponseValidator(result)) {
           throw new UnparseableResponseError(
             "Unable to parse data from Robonect",
-            response,
+            result,
           );
         }
-        return response.result!;
+        return result;
       });
   }
 
@@ -134,8 +72,11 @@ export class RobonectClient {
           },
         },
       })
-      .then((response: IRestResponse<CommandResponse>) => {
-        if (!response.result?.successful) {
+      .catch(handleAuthorizationError)
+      .catch(handleNotReachableError)
+      .then(resultFromResponse)
+      .then((result: CommandResponse) => {
+        if (!result.successful) {
           throw new Error("Could not set mode");
         }
       });
@@ -153,8 +94,11 @@ export class RobonectClient {
           },
         },
       })
-      .then((response: IRestResponse<CommandResponse>) => {
-        if (!response.result?.successful) {
+      .catch(handleAuthorizationError)
+      .catch(handleNotReachableError)
+      .then(resultFromResponse)
+      .then((result: CommandResponse) => {
+        if (!result.successful) {
           throw new Error("Could not start job");
         }
       });
