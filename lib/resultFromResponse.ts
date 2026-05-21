@@ -8,10 +8,7 @@ export function resultFromResponse<T>(response: IRestResponse<T>): T {
     );
   }
   if (!response.result) {
-    throw new EmptyResponseError(
-      "Unable to read data from Robonect",
-      response,
-    );
+    throw new EmptyResponseError("Unable to read data from Robonect", response);
   }
   return response.result!;
 }
