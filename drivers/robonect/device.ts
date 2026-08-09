@@ -175,6 +175,7 @@ class RobonectDevice extends Homey.Device {
       if (blades) {
         await this.setCapabilityValue("blade_quality", blades.quality);
       }
+      return statusResponse;
     } catch (err: unknown) {
       this.error(err);
       if (err instanceof AuthorizationError) {
@@ -330,7 +331,22 @@ class RobonectDevice extends Homey.Device {
       settings.password,
     );
     await client.clearError();
-    await this.pollData();
+
+    const maxAttempts = 3;
+    for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+      const statusResponse = await this.pollData();
+      if (statusResponse && !statusResponse.error) {
+        return;
+      }
+
+      if (attempt < maxAttempts) {
+        await new Promise<void>((resolve) => {
+          this.homey.setTimeout(resolve, 1000);
+        });
+      }
+    }
+
+    throw new Error("Mower still reports an error after clearing it");
   }
 
   async onSettings({

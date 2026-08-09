@@ -253,7 +253,7 @@ describe("RobonectClient", () => {
     it("should successfully clear the mower error", async () => {
       nock("http://localhost")
         .get("/json")
-        .query({ cmd: "error" })
+        .query({ cmd: "error", reset: "" })
         .reply(200, { successful: true });
 
       await expect(client.clearError()).resolves.toBeUndefined();
@@ -262,11 +262,15 @@ describe("RobonectClient", () => {
     it("should throw error if response is not successful", async () => {
       nock("http://localhost")
         .get("/json")
-        .query({ cmd: "error" })
-        .reply(200, { successful: false });
+        .query({ cmd: "error", reset: "" })
+        .reply(200, {
+          successful: false,
+          error_code: 42,
+          error_message: "Reset rejected",
+        });
 
       await expect(client.clearError()).rejects.toThrow(
-        "Could not clear mower error",
+        "Could not clear mower error (42): Reset rejected",
       );
     });
   });
