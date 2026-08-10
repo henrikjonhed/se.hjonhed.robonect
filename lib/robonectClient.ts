@@ -11,6 +11,8 @@ import { resultFromResponse } from "./resultFromResponse";
 
 interface CommandResponse {
   successful: boolean;
+  error_code?: number;
+  error_message?: string;
 }
 
 export class RobonectClient {
@@ -140,19 +142,20 @@ export class RobonectClient {
 
   async clearError(): Promise<void> {
     return this.client
-      .get<CommandResponse>("", <IRequestOptions>{
-        queryParameters: {
-          params: {
-            cmd: "error",
-          },
-        },
-      })
+      .get<CommandResponse>("/json?cmd=error&reset")
       .catch(handleAuthorizationError)
       .catch(handleNotReachableError)
       .then(resultFromResponse)
       .then((result: CommandResponse) => {
         if (!result.successful) {
-          throw new Error("Could not clear mower error");
+          const errorCode =
+            result.error_code === undefined ? "" : ` (${result.error_code})`;
+          const errorMessage = result.error_message
+            ? `: ${result.error_message}`
+            : "";
+          throw new Error(
+            `Could not clear mower error${errorCode}${errorMessage}`,
+          );
         }
       });
   }
